@@ -8,6 +8,7 @@ import com.alibaba.datax.common.element.Record;
  * Created by liqiang on 16/3/3.
  */
 public abstract class Transformer {
+
     //transformerName的唯一性在datax中检查，或者提交到插件中心检查。
     private String transformerName;
 

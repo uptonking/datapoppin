@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * no comments.
+ * 将配置的transformer转换成TransformerExecution
  * Created by liqiang on 16/3/9.
  */
 public class TransformerUtil {
@@ -20,6 +20,7 @@ public class TransformerUtil {
     private static final Logger LOG = LoggerFactory.getLogger(TransformerUtil.class);
 
     public static List<TransformerExecution> buildTransformerInfo(Configuration taskConfig) {
+
         List<Configuration> tfConfigs = taskConfig.getListConfiguration(CoreConstant.JOB_TRANSFORMER);
         if (tfConfigs == null || tfConfigs.size() == 0) {
             return null;
@@ -27,9 +28,7 @@ public class TransformerUtil {
 
         List<TransformerExecution> result = new ArrayList<TransformerExecution>();
 
-
         List<String> functionNames = new ArrayList<String>();
-
 
         for (Configuration configuration : tfConfigs) {
             String functionName = configuration.getString("name");

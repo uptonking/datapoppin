@@ -8,7 +8,11 @@ import com.alibaba.datax.core.statistics.communication.CommunicationTool;
 import com.alibaba.datax.dataxservice.face.domain.enums.State;
 import org.apache.commons.lang.Validate;
 
+/**
+ * 执行器抽象类
+ */
 public abstract class AbstractRunner {
+
     private AbstractTaskPlugin plugin;
 
     private Configuration jobConf;

@@ -8,6 +8,7 @@ import java.math.BigInteger;
 import java.util.Date;
 
 /**
+ * Bool类型字段
  * Created by jingxing on 14-8-24.
  */
 public class BoolColumn extends Column {

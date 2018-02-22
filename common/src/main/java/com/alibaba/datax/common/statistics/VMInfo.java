@@ -13,10 +13,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * JVM信息
  * Created by liqiang on 15/11/12.
  */
 public class VMInfo {
+
     private static final Logger LOG = LoggerFactory.getLogger(VMInfo.class);
+
     static final long MB = 1024 * 1024;
     static final long GB = 1024 * 1024 * 1024;
     public static Object lock = new Object();
@@ -286,10 +289,10 @@ public class VMInfo {
                 sb.append("\t\t ");
                 sb.append(String.format("%-20s | %-18s | %-18s | %-18s | %-18s | %-18s | %-18s | %-18s | %-18s \n",
                         gc.name, gc.curDeltaGCCount, gc.totalGCCount, gc.maxDeltaGCCount, gc.minDeltaGCCount,
-                        String.format("%,.3fs",(float)gc.curDeltaGCTime/1000),
-                        String.format("%,.3fs",(float)gc.totalGCTime/1000),
-                        String.format("%,.3fs",(float)gc.maxDeltaGCTime/1000),
-                        String.format("%,.3fs",(float)gc.minDeltaGCTime/1000)));
+                        String.format("%,.3fs", (float) gc.curDeltaGCTime / 1000),
+                        String.format("%,.3fs", (float) gc.totalGCTime / 1000),
+                        String.format("%,.3fs", (float) gc.maxDeltaGCTime / 1000),
+                        String.format("%,.3fs", (float) gc.minDeltaGCTime / 1000)));
 
             }
             return sb.toString();
@@ -304,9 +307,9 @@ public class VMInfo {
                 sb.append("\t\t ");
                 sb.append(String.format("%-20s | %-18s | %-18s | %-18s | %-18s | %-18s | %-18s \n",
                         gc.name, gc.totalGCCount, gc.maxDeltaGCCount, gc.minDeltaGCCount,
-                        String.format("%,.3fs",(float)gc.totalGCTime/1000),
-                        String.format("%,.3fs",(float)gc.maxDeltaGCTime/1000),
-                        String.format("%,.3fs",(float)gc.minDeltaGCTime/1000)));
+                        String.format("%,.3fs", (float) gc.totalGCTime / 1000),
+                        String.format("%,.3fs", (float) gc.maxDeltaGCTime / 1000),
+                        String.format("%,.3fs", (float) gc.minDeltaGCTime / 1000)));
 
             }
             return sb.toString();

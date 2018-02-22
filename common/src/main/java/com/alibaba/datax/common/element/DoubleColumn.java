@@ -7,6 +7,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 
+/**
+ * Double类型字段
+ */
 public class DoubleColumn extends Column {
 
 	public DoubleColumn(final String data) {
@@ -24,7 +27,7 @@ public class DoubleColumn extends Column {
 
 	/**
 	 * Double无法表示准确的小数数据，我们不推荐使用该方法保存Double数据，建议使用String作为构造入参
-	 * 
+	 *
 	 * */
 	public DoubleColumn(final Double data) {
 		this(data == null ? (String) null
@@ -33,7 +36,7 @@ public class DoubleColumn extends Column {
 
 	/**
 	 * Float无法表示准确的小数数据，我们不推荐使用该方法保存Float数据，建议使用String作为构造入参
-	 * 
+	 *
 	 * */
 	public DoubleColumn(final Float data) {
 		this(data == null ? (String) null

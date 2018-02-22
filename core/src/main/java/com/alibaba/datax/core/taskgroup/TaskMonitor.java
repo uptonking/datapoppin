@@ -11,6 +11,9 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 任务监控器
+ * <p>
+ * 用于任务注册、移除、报告、统计信息获取
  * Created by liqiang on 15/7/23.
  */
 public class TaskMonitor {

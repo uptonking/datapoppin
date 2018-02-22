@@ -6,6 +6,9 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.concurrent.*;
 
+/**
+ * 重试工具类
+ */
 public final class RetryUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(RetryUtil.class);
@@ -29,7 +32,7 @@ public final class RetryUtil {
         Retry retry = new Retry();
         return retry.doRetry(callable, retryTimes, sleepTimeInMilliSecond, exponential, null);
     }
-    
+
     /**
      * 重试次数工具方法.
      *
@@ -114,7 +117,7 @@ public final class RetryUtil {
                     if (i == 0) {
                         LOG.error(String.format("Exception when calling callable, 异常Msg:%s", saveException.getMessage()), saveException);
                     }
-                    
+
                     if (null != retryExceptionClasss && !retryExceptionClasss.isEmpty()) {
                         boolean needRetry = false;
                         for (Class<?> eachExceptionClass : retryExceptionClasss) {
@@ -127,7 +130,7 @@ public final class RetryUtil {
                             throw saveException;
                         }
                     }
-                    
+
                     if (i + 1 < retryTimes && sleepTimeInMilliSecond > 0) {
                         long startTime = System.currentTimeMillis();
 

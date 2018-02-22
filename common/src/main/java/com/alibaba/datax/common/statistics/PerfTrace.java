@@ -14,7 +14,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
- * PerfTrace 记录 job（local模式），taskGroup（distribute模式），因为这2种都是jvm，即一个jvm里只需要有1个PerfTrace。
+ * PerfTrace 记录 job（local模式），taskGroup（distribute模式），
+ * 因为这2种都是jvm，即一个jvm里只需要有1个PerfTrace
  */
 
 public class PerfTrace {

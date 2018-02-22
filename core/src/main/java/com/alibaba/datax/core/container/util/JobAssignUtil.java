@@ -8,12 +8,16 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
+/**
+ * 作业分配工具类
+ */
 public final class JobAssignUtil {
+
     private JobAssignUtil() {
     }
 
     /**
-     * 公平的分配 task 到对应的 taskGroup 中。
+     * 公平的分配 task 到对应的 taskGroup 中
      * 公平体现在：会考虑 task 中对资源负载作的 load 标识进行更均衡的作业分配操作。
      * TODO 具体文档举例说明
      */
@@ -49,6 +53,8 @@ public final class JobAssignUtil {
         }
 
         LinkedHashMap<String, List<Integer>> resourceMarkAndTaskIdMap = parseAndGetResourceMarkAndTaskIdMap(contentConfig);
+
+        //开始分配任务
         List<Configuration> taskGroupConfig = doAssign(resourceMarkAndTaskIdMap, configuration, taskGroupNumber);
 
         // 调整 每个 taskGroup 对应的 Channel 个数（属于优化范畴）
@@ -56,6 +62,12 @@ public final class JobAssignUtil {
         return taskGroupConfig;
     }
 
+    /**
+     * 调整channelNumber到任务组，均分
+     *
+     * @param taskGroupConfig 任务组配置
+     * @param channelNumber   并发通道数量
+     */
     private static void adjustChannelNumPerTaskGroup(List<Configuration> taskGroupConfig, int channelNumber) {
         int taskGroupNumber = taskGroupConfig.size();
         int avgChannelsPerTaskGroup = channelNumber / taskGroupNumber;
@@ -74,8 +86,7 @@ public final class JobAssignUtil {
     }
 
     /**
-     * 根据task 配置，获取到：
-     * 资源名称 --> taskId(List) 的 map 映射关系
+     * 根据task 配置，获取 资源名称 --> taskId(List) 的 map 映射关系
      */
     private static LinkedHashMap<String, List<Integer>> parseAndGetResourceMarkAndTaskIdMap(List<Configuration> contentConfig) {
         // key: resourceMark, value: taskId
@@ -110,7 +121,8 @@ public final class JobAssignUtil {
 
 
     /**
-     * /**
+     * 分配任务的算法
+     * <p>
      * 需要实现的效果通过例子来说是：
      * <pre>
      * a 库上有表：0, 1, 2

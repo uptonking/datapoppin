@@ -2,7 +2,11 @@ package com.alibaba.datax.core.transport.transformer;
 
 import com.alibaba.datax.common.spi.ErrorCode;
 
+/**
+ * 转换失败错误码枚举类
+ */
 public enum TransformerErrorCode implements ErrorCode {
+
     //重复命名
     TRANSFORMER_NAME_ERROR("TransformerErrorCode-01","Transformer name illegal"),
     TRANSFORMER_DUPLICATE_ERROR("TransformerErrorCode-02","Transformer name has existed"),

@@ -17,8 +17,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * 配置解析器
+ */
 public final class ConfigParser {
+
     private static final Logger LOG = LoggerFactory.getLogger(ConfigParser.class);
+
     /**
      * 指定Job配置路径，ConfigParser会解析Job、Plugin、Core全部信息，并以Configuration返回
      */
@@ -44,15 +49,15 @@ public final class ConfigParser {
         pluginList.add(readerPluginName);
         pluginList.add(writerPluginName);
 
-        if(StringUtils.isNotEmpty(preHandlerName)) {
+        if (StringUtils.isNotEmpty(preHandlerName)) {
             pluginList.add(preHandlerName);
         }
-        if(StringUtils.isNotEmpty(postHandlerName)) {
+        if (StringUtils.isNotEmpty(postHandlerName)) {
             pluginList.add(postHandlerName);
         }
         try {
             configuration.merge(parsePluginConfig(new ArrayList<String>(pluginList)), false);
-        }catch (Exception e){
+        } catch (Exception e) {
             //吞掉异常，保持log干净。这里message足够。
             LOG.warn(String.format("插件[%s,%s]加载失败，1s后重试... Exception:%s ", readerPluginName, writerPluginName, e.getMessage()));
             try {
@@ -66,10 +71,22 @@ public final class ConfigParser {
         return configuration;
     }
 
+    /**
+     * 从本地路径获取配置信息实例
+     *
+     * @param path 本地文件绝对路径
+     * @return 配置信息对象
+     */
     private static Configuration parseCoreConfig(final String path) {
         return Configuration.from(new File(path));
     }
 
+    /**
+     * 从路径获取配置信息对象
+     *
+     * @param path http url / 本地文件绝对路径
+     * @return 配置信息对象
+     */
     public static Configuration parseJobConfig(final String path) {
         String jobContent = getJobContent(path);
         Configuration config = Configuration.from(jobContent);
@@ -77,13 +94,21 @@ public final class ConfigParser {
         return SecretUtil.decryptSecretKey(config);
     }
 
+    /**
+     * 从配置文件获取信息
+     *
+     * @param jobResource http url / 本地文件绝对路径
+     * @return 文本字符串
+     */
     private static String getJobContent(String jobResource) {
+
         String jobContent;
 
         boolean isJobResourceFromHttp = jobResource.trim().toLowerCase().startsWith("http");
 
-
         if (isJobResourceFromHttp) {
+            ///对于从http url远程加载的配置文件
+
             //设置httpclient的 HTTP_TIMEOUT_INMILLIONSECONDS
             Configuration coreConfig = ConfigParser.parseCoreConfig(CoreConstant.DATAX_CONF_PATH);
             int httpTimeOutInMillionSeconds = coreConfig.getInt(
@@ -101,14 +126,18 @@ public final class ConfigParser {
                 throw DataXException.asDataXException(FrameworkErrorCode.CONFIG_ERROR, "获取作业配置信息失败:" + jobResource, e);
             }
         } else {
-            // jobResource 是本地文件绝对路径
+            /// 对于加载的本地配置文件
+
             try {
+                //从本地读取配置文件，并转换成string
                 jobContent = FileUtils.readFileToString(new File(jobResource));
+                LOG.debug("本地配置文件读取成功：" + jobResource);
             } catch (IOException e) {
                 throw DataXException.asDataXException(FrameworkErrorCode.CONFIG_ERROR, "获取作业配置信息失败:" + jobResource, e);
             }
         }
 
+        ///返回前检查非空
         if (jobContent == null) {
             throw DataXException.asDataXException(FrameworkErrorCode.CONFIG_ERROR, "获取作业配置信息失败:" + jobResource);
         }
@@ -123,7 +152,7 @@ public final class ConfigParser {
         for (final String each : ConfigParser
                 .getDirAsList(CoreConstant.DATAX_PLUGIN_READER_HOME)) {
             Configuration eachReaderConfig = ConfigParser.parseOnePluginConfig(each, "reader", replicaCheckPluginSet, wantPluginNames);
-            if(eachReaderConfig!=null) {
+            if (eachReaderConfig != null) {
                 configuration.merge(eachReaderConfig, true);
                 complete += 1;
             }
@@ -132,7 +161,7 @@ public final class ConfigParser {
         for (final String each : ConfigParser
                 .getDirAsList(CoreConstant.DATAX_PLUGIN_WRITER_HOME)) {
             Configuration eachWriterConfig = ConfigParser.parseOnePluginConfig(each, "writer", replicaCheckPluginSet, wantPluginNames);
-            if(eachWriterConfig!=null) {
+            if (eachWriterConfig != null) {
                 configuration.merge(eachWriterConfig, true);
                 complete += 1;
             }
@@ -154,7 +183,7 @@ public final class ConfigParser {
 
         String pluginPath = configuration.getString("path");
         String pluginName = configuration.getString("name");
-        if(!pluginSet.contains(pluginName)) {
+        if (!pluginSet.contains(pluginName)) {
             pluginSet.add(pluginName);
         } else {
             throw DataXException.asDataXException(FrameworkErrorCode.PLUGIN_INIT_ERROR, "插件加载失败,存在重复插件:" + filePath);

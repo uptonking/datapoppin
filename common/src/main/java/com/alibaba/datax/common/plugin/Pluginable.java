@@ -2,7 +2,12 @@ package com.alibaba.datax.common.plugin;
 
 import com.alibaba.datax.common.util.Configuration;
 
+/**
+ * 插件定义接口
+ * 主要是元信息和具体配置
+ */
 public interface Pluginable {
+
 	String getDeveloper();
 
     String getDescription();

@@ -18,6 +18,9 @@ package com.alibaba.datax.common.plugin;
 
 import com.alibaba.datax.common.element.Record;
 
+/**
+ * 行数据发送者，到writer
+ */
 public interface RecordSender {
 
 	public Record createRecord();

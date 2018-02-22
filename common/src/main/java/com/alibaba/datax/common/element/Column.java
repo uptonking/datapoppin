@@ -7,69 +7,78 @@ import java.math.BigInteger;
 import java.util.Date;
 
 /**
+ * 单个字段抽象类
+ * <p>
+ * 内含枚举enum Type，即datax内置数据类型
+ * <p>
  * Created by jingxing on 14-8-24.
- * <p/>
  */
 public abstract class Column {
 
-	private Type type;
+    private Type type;
 
-	private Object rawData;
+    private Object rawData;
 
-	private int byteSize;
+    private int byteSize;
 
-	public Column(final Object object, final Type type, int byteSize) {
-		this.rawData = object;
-		this.type = type;
-		this.byteSize = byteSize;
-	}
+    public Column(final Object object, final Type type, int byteSize) {
+        this.rawData = object;
+        this.type = type;
+        this.byteSize = byteSize;
+    }
 
-	public Object getRawData() {
-		return this.rawData;
-	}
+    public Object getRawData() {
+        return this.rawData;
+    }
 
-	public Type getType() {
-		return this.type;
-	}
+    public Type getType() {
+        return this.type;
+    }
 
-	public int getByteSize() {
-		return this.byteSize;
-	}
+    public int getByteSize() {
+        return this.byteSize;
+    }
 
-	protected void setType(Type type) {
-		this.type = type;
-	}
+    protected void setType(Type type) {
+        this.type = type;
+    }
 
-	protected void setRawData(Object rawData) {
-		this.rawData = rawData;
-	}
+    protected void setRawData(Object rawData) {
+        this.rawData = rawData;
+    }
 
-	protected void setByteSize(int byteSize) {
-		this.byteSize = byteSize;
-	}
+    protected void setByteSize(int byteSize) {
+        this.byteSize = byteSize;
+    }
 
-	public abstract Long asLong();
+    public abstract Long asLong();
 
-	public abstract Double asDouble();
+    public abstract Double asDouble();
 
-	public abstract String asString();
+    public abstract String asString();
 
-	public abstract Date asDate();
+    public abstract Date asDate();
 
-	public abstract byte[] asBytes();
+    public abstract byte[] asBytes();
 
-	public abstract Boolean asBoolean();
+    public abstract Boolean asBoolean();
 
-	public abstract BigDecimal asBigDecimal();
+    //BigDecimal大浮点数，Java只有BigDecimal而没有Decimal，理论上无限大
+    public abstract BigDecimal asBigDecimal();
 
-	public abstract BigInteger asBigInteger();
+    //BigInteger大整数，支持的范围比Long大，Long最大19位，理论上无限大
+    public abstract BigInteger asBigInteger();
 
-	@Override
-	public String toString() {
-		return JSON.toJSONString(this);
-	}
+    @Override
+    public String toString() {
+        return JSON.toJSONString(this);
+    }
 
-	public enum Type {
-		BAD, NULL, INT, LONG, DOUBLE, STRING, BOOL, DATE, BYTES
-	}
+    /**
+     * datax内置数据类型，7种常用(INT待定)，2种特殊
+     */
+    public enum Type {
+        BAD, NULL, INT, LONG, DOUBLE, STRING, BOOL, DATE, BYTES
+    }
+
 }

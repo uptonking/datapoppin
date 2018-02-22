@@ -9,6 +9,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * 字符串工具类
+ * 如字节大小格式化，url后的请求参数转Map
+ */
 public class StrUtil {
 
     private final static long KB_IN_BYTES = 1024;
@@ -51,6 +55,7 @@ public class StrUtil {
 
 
     public static String replaceVariable(final String param) {
+
         Map<String, String> mapping = new HashMap<String, String>();
 
         Matcher matcher = VARIABLE_PATTERN.matcher(param);

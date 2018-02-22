@@ -7,10 +7,11 @@ import com.alibaba.datax.transformer.Transformer;
 import java.util.Map;
 
 /**
- * no comments.
+ * 复合转换器代理类，仅字面意义
  * Created by liqiang on 16/3/8.
  */
 public class ComplexTransformerProxy extends ComplexTransformer {
+
     private Transformer realTransformer;
 
     public ComplexTransformerProxy(Transformer transformer) {

@@ -9,7 +9,7 @@ import com.alibaba.datax.transformer.Transformer;
 import java.util.Arrays;
 
 /**
- * no comments.
+ * 内置的字符串截去头尾空字符换器实现类
  * Created by liqiang on 16/3/4.
  */
 public class PadTransformer extends Transformer {

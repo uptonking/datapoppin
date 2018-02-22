@@ -9,10 +9,11 @@ import com.alibaba.datax.transformer.Transformer;
 import java.util.Arrays;
 
 /**
- * no comments.
+ * 内置的字符串截取转换器实现类
  * Created by liqiang on 16/3/4.
  */
 public class SubstrTransformer extends Transformer {
+
     public SubstrTransformer() {
         setTransformerName("dx_substr");
     }
@@ -42,7 +43,7 @@ public class SubstrTransformer extends Transformer {
         try {
             String oriValue = column.asString();
             //如果字段为空，跳过subStr处理
-            if(oriValue == null){
+            if (oriValue == null) {
                 return record;
             }
             String newValue;
@@ -58,7 +59,7 @@ public class SubstrTransformer extends Transformer {
             record.setColumn(columnIndex, new StringColumn(newValue));
 
         } catch (Exception e) {
-            throw DataXException.asDataXException(TransformerErrorCode.TRANSFORMER_RUN_EXCEPTION, e.getMessage(),e);
+            throw DataXException.asDataXException(TransformerErrorCode.TRANSFORMER_RUN_EXCEPTION, e.getMessage(), e);
         }
         return record;
     }

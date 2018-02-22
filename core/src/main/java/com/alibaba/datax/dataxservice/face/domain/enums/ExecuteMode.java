@@ -1,20 +1,24 @@
 package com.alibaba.datax.dataxservice.face.domain.enums;
 
+/**
+ * 作业执行模式，3种
+ */
 public enum ExecuteMode implements EnumStrVal {
 
     STANDALONE("standalone"),
     LOCAL("local"),
     DISTRIBUTE("distribute");
 
-    String value;
+    //String value;
+    private final String value;
 
-    ExecuteMode(String value) {
+    private ExecuteMode(String value) {
         this.value = value;
     }
 
     @Override
     public String value() {
-        return value;
+        return this.value;
     }
 
     public String getValue() {

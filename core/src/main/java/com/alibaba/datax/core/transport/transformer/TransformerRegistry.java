@@ -17,7 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * no comments.
+ * 转换器注册管理类
+ *
  * Created by liqiang on 16/3/3.
  */
 public class TransformerRegistry {

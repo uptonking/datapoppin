@@ -8,12 +8,15 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
+ * JVM启动时获取主机名及IP
+ * <p>
  * Created by liqiang on 15/8/25.
  */
 public class HostUtils {
 
     public static final String IP;
     public static final String HOSTNAME;
+
     private static final Logger log = LoggerFactory.getLogger(HostUtils.class);
 
     static {

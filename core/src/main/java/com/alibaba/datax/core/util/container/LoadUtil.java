@@ -16,20 +16,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by jingxing on 14-8-24.
- * <p/>
- * 插件加载器，大体上分reader、transformer（还未实现）和writer三中插件类型，
+ * 插件加载器
+ * 大体上分reader、transformer（还未实现）和writer三中插件类型，
  * reader和writer在执行时又可能出现Job和Task两种运行时（加载的类不同）
+ * <p>
+ * Created by jingxing on 14-8-24.
  */
 public class LoadUtil {
+
     private static final String pluginTypeNameFormat = "plugin.%s.%s";
 
     private LoadUtil() {
     }
 
+    /**
+     * 容器类型枚举类，2种
+     */
     private enum ContainerType {
+
         Job("Job"), Task("Task");
-        private String type;
+
+        private final String type;
 
         private ContainerType(String type) {
             this.type = type;
@@ -53,8 +60,6 @@ public class LoadUtil {
 
     /**
      * 设置pluginConfigs，方便后面插件来获取
-     *
-     * @param pluginConfigs
      */
     public static void bind(Configuration pluginConfigs) {
         pluginRegisterCenter = pluginConfigs;
@@ -83,10 +88,6 @@ public class LoadUtil {
 
     /**
      * 加载JobPlugin，reader、writer都可能要加载
-     *
-     * @param pluginType
-     * @param pluginName
-     * @return
      */
     public static AbstractJobPlugin loadJobPlugin(PluginType pluginType,
                                                   String pluginName) {
@@ -108,10 +109,6 @@ public class LoadUtil {
 
     /**
      * 加载taskPlugin，reader、writer都可能加载
-     *
-     * @param pluginType
-     * @param pluginName
-     * @return
      */
     public static AbstractTaskPlugin loadTaskPlugin(PluginType pluginType,
                                                     String pluginName) {
@@ -132,10 +129,6 @@ public class LoadUtil {
 
     /**
      * 根据插件类型、名字和执行时taskGroupId加载对应运行器
-     *
-     * @param pluginType
-     * @param pluginName
-     * @return
      */
     public static AbstractRunner loadPluginRunner(PluginType pluginType, String pluginName) {
         AbstractTaskPlugin taskPlugin = LoadUtil.loadTaskPlugin(pluginType,
@@ -156,11 +149,6 @@ public class LoadUtil {
 
     /**
      * 反射出具体plugin实例
-     *
-     * @param pluginType
-     * @param pluginName
-     * @param pluginRunType
-     * @return
      */
     @SuppressWarnings("unchecked")
     private static synchronized Class<? extends AbstractPlugin> loadPluginClass(

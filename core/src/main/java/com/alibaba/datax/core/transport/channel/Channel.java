@@ -13,9 +13,11 @@ import org.slf4j.LoggerFactory;
 import java.util.Collection;
 
 /**
- * Created by jingxing on 14-8-25.
- * <p/>
+ * 传输通道抽象类
+ * <p>
  * 统计和限速都在这里
+ * <p>
+ * Created by jingxing on 14-8-25.
  */
 public abstract class Channel {
 
@@ -27,9 +29,11 @@ public abstract class Channel {
 
     protected int byteCapacity;
 
-    protected long byteSpeed; // bps: bytes/s
+    // bps: bytes/s
+    protected long byteSpeed;
 
-    protected long recordSpeed; // tps: records/s
+    // tps: records/s
+    protected long recordSpeed;
 
     protected long flowControlInterval;
 
@@ -48,17 +52,16 @@ public abstract class Channel {
     private Communication lastCommunication = new Communication();
 
     public Channel(final Configuration configuration) {
-        //channel的queue里默认record为1万条。原来为512条
-        int capacity = configuration.getInt(
-                CoreConstant.DATAX_CORE_TRANSPORT_CHANNEL_CAPACITY, 2048);
-        long byteSpeed = configuration.getLong(
-                CoreConstant.DATAX_CORE_TRANSPORT_CHANNEL_SPEED_BYTE, 1024 * 1024);
-        long recordSpeed = configuration.getLong(
-                CoreConstant.DATAX_CORE_TRANSPORT_CHANNEL_SPEED_RECORD, 10000);
+
+        //默认传输通道数量2048，不可用，设置必须修改
+        int capacity = configuration.getInt(CoreConstant.DATAX_CORE_TRANSPORT_CHANNEL_CAPACITY, 2048);
+        //默认传输速度 1 MB/
+        long byteSpeed = configuration.getLong(CoreConstant.DATAX_CORE_TRANSPORT_CHANNEL_SPEED_BYTE, 1024 * 1024);
+        //默认每次读取行数，channel的queue里默认record为1万条，原来为512条
+        long recordSpeed = configuration.getLong(CoreConstant.DATAX_CORE_TRANSPORT_CHANNEL_SPEED_RECORD, 10000);
 
         if (capacity <= 0) {
-            throw new IllegalArgumentException(String.format(
-                    "通道容量[%d]必须大于0.", capacity));
+            throw new IllegalArgumentException(String.format("通道容量[%d]必须大于0.", capacity));
         }
 
         synchronized (isFirstPrint) {
@@ -71,8 +74,7 @@ public abstract class Channel {
             }
         }
 
-        this.taskGroupId = configuration.getInt(
-                CoreConstant.DATAX_CORE_CONTAINER_TASKGROUP_ID);
+        this.taskGroupId = configuration.getInt(CoreConstant.DATAX_CORE_CONTAINER_TASKGROUP_ID);
         this.capacity = capacity;
         this.byteSpeed = byteSpeed;
         this.recordSpeed = recordSpeed;

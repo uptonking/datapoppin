@@ -10,9 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by jingxing on 14-9-1.
- * <p/>
+ * 写执行器
  * 单个slice的writer执行调用
+ * <p>
+ * Created by jingxing on 14-9-1.
  */
 public class WriterRunner extends AbstractRunner implements Runnable {
 
@@ -78,13 +79,13 @@ public class WriterRunner extends AbstractRunner implements Runnable {
             channelWaitRead.end(super.getRunnerCommunication().getLongCounter(CommunicationTool.WAIT_READER_TIME));
         }
     }
-    
-    public boolean supportFailOver(){
-    	Writer.Task taskWriter = (Writer.Task) this.getPlugin();
-    	return taskWriter.supportFailOver();
+
+    public boolean supportFailOver() {
+        Writer.Task taskWriter = (Writer.Task) this.getPlugin();
+        return taskWriter.supportFailOver();
     }
 
-    public void shutdown(){
+    public void shutdown() {
         recordReceiver.shutdown();
     }
 }

@@ -3,7 +3,7 @@ package com.alibaba.datax.common.exception;
 import com.alibaba.datax.common.spi.ErrorCode;
 
 /**
- *
+ * datax统一异常代码
  */
 public enum CommonErrorCode implements ErrorCode {
 

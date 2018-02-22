@@ -10,7 +10,11 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -21,7 +25,9 @@ import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ThreadPoolExecutor;
 
-
+/**
+ * 基于apache HttpClient封装的工具类
+ */
 public class HttpClientUtil {
 
     private static CredentialsProvider provider;
@@ -30,15 +36,20 @@ public class HttpClientUtil {
 
     private volatile static HttpClientUtil clientUtil;
 
-    //构建httpclient的时候一定要设置这两个参数。淘宝很多生产故障都由此引起
+    //构建httpclient的时候一定要设置这两个参数 超时时间 & 连接池大小，淘宝很多生产故障都由此引起
     private static int HTTP_TIMEOUT_INMILLIONSECONDS = 5000;
-
     private static final int POOL_SIZE = 20;
 
     private static ThreadPoolExecutor asyncExecutor = RetryUtil.createThreadPoolExecutor();
 
     public static void setHttpTimeoutInMillionSeconds(int httpTimeoutInMillionSeconds) {
         HTTP_TIMEOUT_INMILLIONSECONDS = httpTimeoutInMillionSeconds;
+    }
+
+    public HttpClientUtil() {
+        Properties prob = SecretUtil.getSecurityProperties();
+        HttpClientUtil.setBasicAuth(prob.getProperty("auth.user"), prob.getProperty("auth.pass"));
+        initApacheHttpClient();
     }
 
     public static synchronized HttpClientUtil getHttpClientUtil() {
@@ -52,11 +63,6 @@ public class HttpClientUtil {
         return clientUtil;
     }
 
-    public HttpClientUtil() {
-        Properties prob  = SecretUtil.getSecurityProperties();
-        HttpClientUtil.setBasicAuth(prob.getProperty("auth.user"),prob.getProperty("auth.pass"));
-        initApacheHttpClient();
-    }
 
     public void destroy() {
         destroyApacheHttpClient();
@@ -65,7 +71,7 @@ public class HttpClientUtil {
     public static void setBasicAuth(String username, String password) {
         provider = new BasicCredentialsProvider();
         provider.setCredentials(AuthScope.ANY,
-                new UsernamePasswordCredentials(username,password));
+                new UsernamePasswordCredentials(username, password));
     }
 
     // 创建包含connection pool与超时设置的client
@@ -74,13 +80,13 @@ public class HttpClientUtil {
                 .setConnectTimeout(HTTP_TIMEOUT_INMILLIONSECONDS).setConnectionRequestTimeout(HTTP_TIMEOUT_INMILLIONSECONDS)
                 .setStaleConnectionCheckEnabled(true).build();
 
-          if(null == provider) {
-              httpClient = HttpClientBuilder.create().setMaxConnTotal(POOL_SIZE).setMaxConnPerRoute(POOL_SIZE)
-                      .setDefaultRequestConfig(requestConfig).build();
-          } else {
-              httpClient = HttpClientBuilder.create().setMaxConnTotal(POOL_SIZE).setMaxConnPerRoute(POOL_SIZE)
-                      .setDefaultRequestConfig(requestConfig).setDefaultCredentialsProvider(provider).build();
-          }
+        if (null == provider) {
+            httpClient = HttpClientBuilder.create().setMaxConnTotal(POOL_SIZE).setMaxConnPerRoute(POOL_SIZE)
+                    .setDefaultRequestConfig(requestConfig).build();
+        } else {
+            httpClient = HttpClientBuilder.create().setMaxConnTotal(POOL_SIZE).setMaxConnPerRoute(POOL_SIZE)
+                    .setDefaultRequestConfig(requestConfig).setDefaultCredentialsProvider(provider).build();
+        }
     }
 
     private void destroyApacheHttpClient() {
@@ -151,13 +157,13 @@ public class HttpClientUtil {
         }
     }
 
-    public String executeAndGetWithFailedRetry(final HttpRequestBase httpRequestBase, final int retryTimes, final long retryInterval){
+    public String executeAndGetWithFailedRetry(final HttpRequestBase httpRequestBase, final int retryTimes, final long retryInterval) {
         try {
             return RetryUtil.asyncExecuteWithRetry(new Callable<String>() {
                 @Override
                 public String call() throws Exception {
                     String result = executeAndGet(httpRequestBase);
-                    if(result!=null && result.startsWith("{\"result\":-1")){
+                    if (result != null && result.startsWith("{\"result\":-1")) {
                         throw DataXException.asDataXException(FrameworkErrorCode.CALL_REMOTE_FAILED, "远程接口返回-1,将重试");
                     }
                     return result;

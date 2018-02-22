@@ -5,6 +5,8 @@ import com.alibaba.datax.transformer.ComplexTransformer;
 import java.util.Map;
 
 /**
+ * 转换器执行函数信息类
+ *
  * 每个func对应一个实例.
  * Created by liqiang on 16/3/16.
  */

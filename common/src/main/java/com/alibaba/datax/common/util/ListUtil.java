@@ -9,8 +9,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 提供针对 DataX中使用的 List 较为常见的一些封装。 比如：checkIfValueDuplicate 可以用于检查用户配置的 writer
- * 的列不能重复。makeSureNoValueDuplicate亦然，只是会严格报错。
+ * 提供针对 DataX中使用的 List 较为常见的一些封装
+ * <p>
+ * 比如：checkIfValueDuplicate 可以用于检查用户配置的 writer的列不能重复<br/>
+ * makeSureNoValueDuplicate亦然，只是会严格报错
  */
 public final class ListUtil {
 

@@ -1,6 +1,8 @@
 package com.alibaba.datax.common.plugin;
 
 /**
+ * 任务类抽象插件
+ * <p>
  * Created by jingxing on 14-8-24.
  */
 public abstract class AbstractTaskPlugin extends AbstractPlugin {

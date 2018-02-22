@@ -38,20 +38,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by jingxing on 14-8-24.
- * <p/>
+ * 作业容器类
  * job实例运行在jobContainer容器中，它是所有任务的master，负责初始化、拆分、调度、运行、回收、监控和汇报
  * 但它并不做实际的数据同步操作
+ * <p>
+ * Created by jingxing on 14-8-24.
  */
 public class JobContainer extends AbstractContainer {
-    private static final Logger LOG = LoggerFactory
-            .getLogger(JobContainer.class);
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
-            "yyyy-MM-dd HH:mm:ss");
+    private static final Logger LOG = LoggerFactory.getLogger(JobContainer.class);
 
-    private ClassLoaderSwapper classLoaderSwapper = ClassLoaderSwapper
-            .newCurrentThreadClassLoaderSwapper();
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    private ClassLoaderSwapper classLoaderSwapper = ClassLoaderSwapper.newCurrentThreadClassLoaderSwapper();
 
     private long jobId;
 
@@ -94,38 +93,50 @@ public class JobContainer extends AbstractContainer {
      */
     @Override
     public void start() {
+
         LOG.info("DataX jobContainer starts job.");
 
         boolean hasException = false;
+        //drtRun指只检查配置信息和资源是否正确可用，而不执行实际任务
         boolean isDryRun = false;
+
         try {
             this.startTimeStamp = System.currentTimeMillis();
             isDryRun = configuration.getBool(CoreConstant.DATAX_JOB_SETTING_DRYRUN, false);
-            if(isDryRun) {
+
+            if (isDryRun) {
                 LOG.info("jobContainer starts to do preCheck ...");
                 this.preCheck();
+
             } else {
                 userConf = configuration.clone();
                 LOG.debug("jobContainer starts to do preHandle ...");
                 this.preHandle();
 
+                ///在这里初始化的有 读写插件
                 LOG.debug("jobContainer starts to do init ...");
                 this.init();
+
                 LOG.info("jobContainer starts to do prepare ...");
                 this.prepare();
+
                 LOG.info("jobContainer starts to do split ...");
                 this.totalStage = this.split();
+
                 LOG.info("jobContainer starts to do schedule ...");
                 this.schedule();
+
                 LOG.debug("jobContainer starts to do post ...");
                 this.post();
 
                 LOG.debug("jobContainer starts to do postHandle ...");
                 this.postHandle();
+
                 LOG.info("DataX jobId [{}] completed successfully.", this.jobId);
 
                 this.invokeHooks();
             }
+
         } catch (Throwable e) {
             LOG.error("Exception when job run", e);
 
@@ -162,7 +173,7 @@ public class JobContainer extends AbstractContainer {
             throw DataXException.asDataXException(
                     FrameworkErrorCode.RUNTIME_ERROR, e);
         } finally {
-            if(!isDryRun) {
+            if (!isDryRun) {
 
                 this.destroy();
                 this.endTimeStamp = System.currentTimeMillis();
@@ -181,6 +192,9 @@ public class JobContainer extends AbstractContainer {
         }
     }
 
+    /**
+     * 作业执行前的检查入口方法
+     */
     private void preCheck() {
         this.preCheckInit();
         this.adjustChannelNumber();
@@ -193,6 +207,9 @@ public class JobContainer extends AbstractContainer {
         LOG.info("PreCheck通过");
     }
 
+    /**
+     * 检查作业初始化信息
+     */
     private void preCheckInit() {
         this.jobId = this.configuration.getLong(
                 CoreConstant.DATAX_CORE_CONTAINER_JOB_ID, -1);
@@ -212,6 +229,9 @@ public class JobContainer extends AbstractContainer {
         this.jobWriter = this.preCheckWriterInit(jobPluginCollector);
     }
 
+    /**
+     * 检查并执行读插件初始化
+     */
     private Reader.Job preCheckReaderInit(JobPluginCollector jobPluginCollector) {
         this.readerPluginName = this.configuration.getString(
                 CoreConstant.DATAX_JOB_CONTENT_READER_NAME);
@@ -236,7 +256,9 @@ public class JobContainer extends AbstractContainer {
         return jobReader;
     }
 
-
+    /**
+     * 检查并执行写插件初始化
+     */
     private Writer.Job preCheckWriterInit(JobPluginCollector jobPluginCollector) {
         this.writerPluginName = this.configuration.getString(
                 CoreConstant.DATAX_JOB_CONTENT_WRITER_NAME);
@@ -312,7 +334,7 @@ public class JobContainer extends AbstractContainer {
     private void preHandle() {
         String handlerPluginTypeStr = this.configuration.getString(
                 CoreConstant.DATAX_JOB_PREHANDLER_PLUGINTYPE);
-        if(!StringUtils.isNotEmpty(handlerPluginTypeStr)){
+        if (!StringUtils.isNotEmpty(handlerPluginTypeStr)) {
             return;
         }
         PluginType handlerPluginType;
@@ -348,7 +370,7 @@ public class JobContainer extends AbstractContainer {
         String handlerPluginTypeStr = this.configuration.getString(
                 CoreConstant.DATAX_JOB_POSTHANDLER_PLUGINTYPE);
 
-        if(!StringUtils.isNotEmpty(handlerPluginTypeStr)){
+        if (!StringUtils.isNotEmpty(handlerPluginTypeStr)) {
             return;
         }
         PluginType handlerPluginType;
@@ -379,8 +401,10 @@ public class JobContainer extends AbstractContainer {
 
 
     /**
-     * 执行reader和writer最细粒度的切分，需要注意的是，writer的切分结果要参照reader的切分结果，
-     * 达到切分后数目相等，才能满足1：1的通道模型，所以这里可以将reader和writer的配置整合到一起，
+     * 执行reader和writer最细粒度的切分
+     * <p>
+     * 需要注意的是，writer的切分结果要参照reader的切分结果，达到切分后数目相等，才能满足1：1的通道模型
+     * 所以这里可以将reader和writer的配置整合到一起，
      * 然后，为避免顺序给读写端带来长尾影响，将整合的结果shuffler掉
      */
     private int split() {
@@ -398,7 +422,7 @@ public class JobContainer extends AbstractContainer {
 
         List<Configuration> transformerList = this.configuration.getListConfiguration(CoreConstant.DATAX_JOB_CONTENT_TRANSFORMER);
 
-        LOG.debug("transformer configuration: "+ JSON.toJSONString(transformerList));
+        LOG.debug("transformer configuration: " + JSON.toJSONString(transformerList));
         /**
          * 输入是reader和writer的parameter list，输出是content下面元素的list
          */
@@ -406,13 +430,16 @@ public class JobContainer extends AbstractContainer {
                 readerTaskConfigs, writerTaskConfigs, transformerList);
 
 
-        LOG.debug("contentConfig configuration: "+ JSON.toJSONString(contentConfig));
+        LOG.debug("contentConfig configuration: " + JSON.toJSONString(contentConfig));
 
         this.configuration.set(CoreConstant.DATAX_JOB_CONTENT, contentConfig);
 
         return contentConfig.size();
     }
 
+    /**
+     * 调整并行通道数量
+     */
     private void adjustChannelNumber() {
         int needChannelNumberByByte = Integer.MAX_VALUE;
         int needChannelNumberByRecord = Integer.MAX_VALUE;
@@ -432,8 +459,7 @@ public class JobContainer extends AbstractContainer {
                         "在有总bps限速条件下，单个channel的bps值不能为空，也不能为非正数");
             }
 
-            needChannelNumberByByte =
-                    (int) (globalLimitedByteSpeed / channelLimitedByteSpeed);
+            needChannelNumberByByte = (int) (globalLimitedByteSpeed / channelLimitedByteSpeed);
             needChannelNumberByByte =
                     needChannelNumberByByte > 0 ? needChannelNumberByByte : 1;
             LOG.info("Job set Max-Byte-Speed to " + globalLimitedByteSpeed + " bytes.");
@@ -486,10 +512,13 @@ public class JobContainer extends AbstractContainer {
     }
 
     /**
+     * 任务调度方法
+     * <p>
      * schedule首先完成的工作是把上一步reader和writer split的结果整合到具体taskGroupContainer中,
      * 同时不同的执行模式调用不同的调度策略，将所有任务调度起来
      */
     private void schedule() {
+
         /**
          * 这里的全局speed和每个channel的速度设置为B/s
          */
@@ -501,10 +530,7 @@ public class JobContainer extends AbstractContainer {
         this.needChannelNumber = Math.min(this.needChannelNumber, taskNumber);
         PerfTrace.getInstance().setChannelNumber(needChannelNumber);
 
-        /**
-         * 通过获取配置信息得到每个taskGroup需要运行哪些tasks任务
-         */
-
+        //通过获取配置信息得到每个taskGroup需要运行哪些tasks任务
         List<Configuration> taskGroupConfigs = JobAssignUtil.assignFairly(this.configuration,
                 this.needChannelNumber, channelsPerTaskGroup);
 
@@ -512,8 +538,9 @@ public class JobContainer extends AbstractContainer {
 
         ExecuteMode executeMode = null;
         AbstractScheduler scheduler;
+
         try {
-        	executeMode = ExecuteMode.STANDALONE;
+            executeMode = ExecuteMode.STANDALONE;
             scheduler = initStandaloneScheduler(this.configuration);
 
             //设置 executeMode
@@ -542,13 +569,13 @@ public class JobContainer extends AbstractContainer {
                     FrameworkErrorCode.RUNTIME_ERROR, e);
         }
 
-        /**
-         * 检查任务执行情况
-         */
+        // 检查任务执行情况
         this.checkLimit();
     }
 
-
+    /**
+     * 初始化独立调度器
+     */
     private AbstractScheduler initStandaloneScheduler(Configuration configuration) {
         AbstractContainerCommunicator containerCommunicator = new StandAloneJobContainerCommunicator(configuration);
         super.setContainerCommunicator(containerCommunicator);
@@ -762,10 +789,6 @@ public class JobContainer extends AbstractContainer {
 
     /**
      * 按顺序整合reader和writer的配置，这里的顺序不能乱！ 输入是reader、writer级别的配置，输出是一个完整task的配置
-     *
-     * @param readerTasksConfigs
-     * @param writerTasksConfigs
-     * @return
      */
     private List<Configuration> mergeReaderAndWriterTaskConfigs(
             List<Configuration> readerTasksConfigs,
@@ -797,7 +820,7 @@ public class JobContainer extends AbstractContainer {
             taskConfig.set(CoreConstant.JOB_WRITER_PARAMETER,
                     writerTasksConfigs.get(i));
 
-            if(transformerConfigs!=null && transformerConfigs.size()>0){
+            if (transformerConfigs != null && transformerConfigs.size() > 0) {
                 taskConfig.set(CoreConstant.JOB_TRANSFORMER, transformerConfigs);
             }
 
@@ -806,134 +829,6 @@ public class JobContainer extends AbstractContainer {
         }
 
         return contentConfigs;
-    }
-
-    /**
-     * 这里比较复杂，分两步整合 1. tasks到channel 2. channel到taskGroup
-     * 合起来考虑，其实就是把tasks整合到taskGroup中，需要满足计算出的channel数，同时不能多起channel
-     * <p/>
-     * example:
-     * <p/>
-     * 前提条件： 切分后是1024个分表，假设用户要求总速率是1000M/s，每个channel的速率的3M/s，
-     * 每个taskGroup负责运行7个channel
-     * <p/>
-     * 计算： 总channel数为：1000M/s / 3M/s =
-     * 333个，为平均分配，计算可知有308个每个channel有3个tasks，而有25个每个channel有4个tasks，
-     * 需要的taskGroup数为：333 / 7 =
-     * 47...4，也就是需要48个taskGroup，47个是每个负责7个channel，有4个负责1个channel
-     * <p/>
-     * 处理：我们先将这负责4个channel的taskGroup处理掉，逻辑是：
-     * 先按平均为3个tasks找4个channel，设置taskGroupId为0，
-     * 接下来就像发牌一样轮询分配task到剩下的包含平均channel数的taskGroup中
-     * <p/>
-     * TODO delete it
-     *
-     * @param averTaskPerChannel
-     * @param channelNumber
-     * @param channelsPerTaskGroup
-     * @return 每个taskGroup独立的全部配置
-     */
-    @SuppressWarnings("serial")
-    private List<Configuration> distributeTasksToTaskGroup(
-            int averTaskPerChannel, int channelNumber,
-            int channelsPerTaskGroup) {
-        Validate.isTrue(averTaskPerChannel > 0 && channelNumber > 0
-                        && channelsPerTaskGroup > 0,
-                "每个channel的平均task数[averTaskPerChannel]，channel数目[channelNumber]，每个taskGroup的平均channel数[channelsPerTaskGroup]都应该为正数");
-        List<Configuration> taskConfigs = this.configuration
-                .getListConfiguration(CoreConstant.DATAX_JOB_CONTENT);
-        int taskGroupNumber = channelNumber / channelsPerTaskGroup;
-        int leftChannelNumber = channelNumber % channelsPerTaskGroup;
-        if (leftChannelNumber > 0) {
-            taskGroupNumber += 1;
-        }
-
-        /**
-         * 如果只有一个taskGroup，直接打标返回
-         */
-        if (taskGroupNumber == 1) {
-            final Configuration taskGroupConfig = this.configuration.clone();
-            /**
-             * configure的clone不能clone出
-             */
-            taskGroupConfig.set(CoreConstant.DATAX_JOB_CONTENT, this.configuration
-                    .getListConfiguration(CoreConstant.DATAX_JOB_CONTENT));
-            taskGroupConfig.set(CoreConstant.DATAX_CORE_CONTAINER_TASKGROUP_CHANNEL,
-                    channelNumber);
-            taskGroupConfig.set(CoreConstant.DATAX_CORE_CONTAINER_TASKGROUP_ID, 0);
-            return new ArrayList<Configuration>() {
-                {
-                    add(taskGroupConfig);
-                }
-            };
-        }
-
-        List<Configuration> taskGroupConfigs = new ArrayList<Configuration>();
-        /**
-         * 将每个taskGroup中content的配置清空
-         */
-        for (int i = 0; i < taskGroupNumber; i++) {
-            Configuration taskGroupConfig = this.configuration.clone();
-            List<Configuration> taskGroupJobContent = taskGroupConfig
-                    .getListConfiguration(CoreConstant.DATAX_JOB_CONTENT);
-            taskGroupJobContent.clear();
-            taskGroupConfig.set(CoreConstant.DATAX_JOB_CONTENT, taskGroupJobContent);
-
-            taskGroupConfigs.add(taskGroupConfig);
-        }
-
-        int taskConfigIndex = 0;
-        int channelIndex = 0;
-        int taskGroupConfigIndex = 0;
-
-        /**
-         * 先处理掉taskGroup包含channel数不是平均值的taskGroup
-         */
-        if (leftChannelNumber > 0) {
-            Configuration taskGroupConfig = taskGroupConfigs.get(taskGroupConfigIndex);
-            for (; channelIndex < leftChannelNumber; channelIndex++) {
-                for (int i = 0; i < averTaskPerChannel; i++) {
-                    List<Configuration> taskGroupJobContent = taskGroupConfig
-                            .getListConfiguration(CoreConstant.DATAX_JOB_CONTENT);
-                    taskGroupJobContent.add(taskConfigs.get(taskConfigIndex++));
-                    taskGroupConfig.set(CoreConstant.DATAX_JOB_CONTENT,
-                            taskGroupJobContent);
-                }
-            }
-
-            taskGroupConfig.set(CoreConstant.DATAX_CORE_CONTAINER_TASKGROUP_CHANNEL,
-                    leftChannelNumber);
-            taskGroupConfig.set(CoreConstant.DATAX_CORE_CONTAINER_TASKGROUP_ID,
-                    taskGroupConfigIndex++);
-        }
-
-        /**
-         * 下面需要轮询分配，并打上channel数和taskGroupId标记
-         */
-        int equalDivisionStartIndex = taskGroupConfigIndex;
-        for (; taskConfigIndex < taskConfigs.size()
-                && equalDivisionStartIndex < taskGroupConfigs.size(); ) {
-            for (taskGroupConfigIndex = equalDivisionStartIndex; taskGroupConfigIndex < taskGroupConfigs
-                    .size() && taskConfigIndex < taskConfigs.size(); taskGroupConfigIndex++) {
-                Configuration taskGroupConfig = taskGroupConfigs.get(taskGroupConfigIndex);
-                List<Configuration> taskGroupJobContent = taskGroupConfig
-                        .getListConfiguration(CoreConstant.DATAX_JOB_CONTENT);
-                taskGroupJobContent.add(taskConfigs.get(taskConfigIndex++));
-                taskGroupConfig.set(
-                        CoreConstant.DATAX_JOB_CONTENT, taskGroupJobContent);
-            }
-        }
-
-        for (taskGroupConfigIndex = equalDivisionStartIndex;
-             taskGroupConfigIndex < taskGroupConfigs.size(); ) {
-            Configuration taskGroupConfig = taskGroupConfigs.get(taskGroupConfigIndex);
-            taskGroupConfig.set(CoreConstant.DATAX_CORE_CONTAINER_TASKGROUP_CHANNEL,
-                    channelsPerTaskGroup);
-            taskGroupConfig.set(CoreConstant.DATAX_CORE_CONTAINER_TASKGROUP_ID,
-                    taskGroupConfigIndex++);
-        }
-
-        return taskGroupConfigs;
     }
 
     private void postJobReader() {
@@ -965,6 +860,7 @@ public class JobContainer extends AbstractContainer {
         errorLimit.checkPercentageLimit(communication);
     }
 
+
     /**
      * 调用外部hook
      */
@@ -973,4 +869,129 @@ public class JobContainer extends AbstractContainer {
         HookInvoker invoker = new HookInvoker(CoreConstant.DATAX_HOME + "/hook", configuration, comm.getCounter());
         invoker.invokeAll();
     }
+
+    /**
+     * 任务分配到任务组
+     * <p>
+     * 这里比较复杂，分两步整合 1. tasks到channel 2. channel到taskGroup
+     * 合起来考虑，其实就是把tasks整合到taskGroup中，需要满足计算出的channel数，同时不能多起channel
+     * <p/>
+     * example:
+     * <p/>
+     * 前提条件： 切分后是1024个分表，假设用户要求总速率是1000M/s，每个channel的速率的3M/s，
+     * 每个taskGroup负责运行7个channel
+     * <p/>
+     * 计算： 总channel数为：1000M/s / 3M/s =
+     * 333个，为平均分配，计算可知有308个每个channel有3个tasks，而有25个每个channel有4个tasks，
+     * 需要的taskGroup数为：333 / 7 =
+     * 47...4，也就是需要48个taskGroup，47个是每个负责7个channel，有4个负责1个channel
+     * <p/>
+     * 处理：我们先将这负责4个channel的taskGroup处理掉，逻辑是：
+     * 先按平均为3个tasks找4个channel，设置taskGroupId为0，
+     * 接下来就像发牌一样轮询分配task到剩下的包含平均channel数的taskGroup中
+     * <p/>
+     * TODO delete it
+     *
+     * @param averTaskPerChannel
+     * @param channelNumber
+     * @param channelsPerTaskGroup
+     * @return 每个taskGroup独立的全部配置
+     */
+    @SuppressWarnings("serial")
+    private List<Configuration> distributeTasksToTaskGroup(
+            int averTaskPerChannel, int channelNumber,
+            int channelsPerTaskGroup) {
+
+        Validate.isTrue(averTaskPerChannel > 0 && channelNumber > 0
+                        && channelsPerTaskGroup > 0,
+                "每个channel的平均task数[averTaskPerChannel]，channel数目[channelNumber]，每个taskGroup的平均channel数[channelsPerTaskGroup]都应该为正数");
+
+        List<Configuration> taskConfigs = this.configuration.getListConfiguration(CoreConstant.DATAX_JOB_CONTENT);
+        int taskGroupNumber = channelNumber / channelsPerTaskGroup;
+        int leftChannelNumber = channelNumber % channelsPerTaskGroup;
+        if (leftChannelNumber > 0) {
+            taskGroupNumber += 1;
+        }
+
+        ///如果只有一个taskGroup，直接打标返回
+        if (taskGroupNumber == 1) {
+            final Configuration taskGroupConfig = this.configuration.clone();
+            /**
+             * configure的clone不能clone出
+             */
+            taskGroupConfig.set(CoreConstant.DATAX_JOB_CONTENT, this.configuration
+                    .getListConfiguration(CoreConstant.DATAX_JOB_CONTENT));
+            taskGroupConfig.set(CoreConstant.DATAX_CORE_CONTAINER_TASKGROUP_CHANNEL,
+                    channelNumber);
+            taskGroupConfig.set(CoreConstant.DATAX_CORE_CONTAINER_TASKGROUP_ID, 0);
+            return new ArrayList<Configuration>() {
+                {
+                    add(taskGroupConfig);
+                }
+            };
+        }
+
+        List<Configuration> taskGroupConfigs = new ArrayList<Configuration>();
+
+        /// 将每个taskGroup中content的配置清空
+        for (int i = 0; i < taskGroupNumber; i++) {
+            Configuration taskGroupConfig = this.configuration.clone();
+            List<Configuration> taskGroupJobContent = taskGroupConfig
+                    .getListConfiguration(CoreConstant.DATAX_JOB_CONTENT);
+            taskGroupJobContent.clear();
+            taskGroupConfig.set(CoreConstant.DATAX_JOB_CONTENT, taskGroupJobContent);
+
+            taskGroupConfigs.add(taskGroupConfig);
+        }
+
+        int taskConfigIndex = 0;
+        int channelIndex = 0;
+        int taskGroupConfigIndex = 0;
+
+        /// 先处理掉taskGroup包含channel数不是平均值的taskGroup
+        if (leftChannelNumber > 0) {
+            Configuration taskGroupConfig = taskGroupConfigs.get(taskGroupConfigIndex);
+            for (; channelIndex < leftChannelNumber; channelIndex++) {
+                for (int i = 0; i < averTaskPerChannel; i++) {
+                    List<Configuration> taskGroupJobContent = taskGroupConfig
+                            .getListConfiguration(CoreConstant.DATAX_JOB_CONTENT);
+                    taskGroupJobContent.add(taskConfigs.get(taskConfigIndex++));
+                    taskGroupConfig.set(CoreConstant.DATAX_JOB_CONTENT,
+                            taskGroupJobContent);
+                }
+            }
+
+            taskGroupConfig.set(CoreConstant.DATAX_CORE_CONTAINER_TASKGROUP_CHANNEL,
+                    leftChannelNumber);
+            taskGroupConfig.set(CoreConstant.DATAX_CORE_CONTAINER_TASKGROUP_ID,
+                    taskGroupConfigIndex++);
+        }
+
+        /// 下面需要轮询分配，并打上channel数和taskGroupId标记
+        int equalDivisionStartIndex = taskGroupConfigIndex;
+        for (; taskConfigIndex < taskConfigs.size()
+                && equalDivisionStartIndex < taskGroupConfigs.size(); ) {
+            for (taskGroupConfigIndex = equalDivisionStartIndex; taskGroupConfigIndex < taskGroupConfigs
+                    .size() && taskConfigIndex < taskConfigs.size(); taskGroupConfigIndex++) {
+                Configuration taskGroupConfig = taskGroupConfigs.get(taskGroupConfigIndex);
+                List<Configuration> taskGroupJobContent = taskGroupConfig
+                        .getListConfiguration(CoreConstant.DATAX_JOB_CONTENT);
+                taskGroupJobContent.add(taskConfigs.get(taskConfigIndex++));
+                taskGroupConfig.set(
+                        CoreConstant.DATAX_JOB_CONTENT, taskGroupJobContent);
+            }
+        }
+
+        for (taskGroupConfigIndex = equalDivisionStartIndex;
+             taskGroupConfigIndex < taskGroupConfigs.size(); ) {
+            Configuration taskGroupConfig = taskGroupConfigs.get(taskGroupConfigIndex);
+            taskGroupConfig.set(CoreConstant.DATAX_CORE_CONTAINER_TASKGROUP_CHANNEL,
+                    channelsPerTaskGroup);
+            taskGroupConfig.set(CoreConstant.DATAX_CORE_CONTAINER_TASKGROUP_ID,
+                    taskGroupConfigIndex++);
+        }
+
+        return taskGroupConfigs;
+    }
+
 }

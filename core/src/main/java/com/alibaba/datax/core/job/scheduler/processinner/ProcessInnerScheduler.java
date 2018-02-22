@@ -12,6 +12,10 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * 调度器抽象类
+ * 主要用于任务组启动，失败状态抛出异常
+ */
 public abstract class ProcessInnerScheduler extends AbstractScheduler {
 
     private ExecutorService taskGroupContainerExecutorService;
@@ -33,6 +37,13 @@ public abstract class ProcessInnerScheduler extends AbstractScheduler {
         this.taskGroupContainerExecutorService.shutdown();
     }
 
+    private TaskGroupContainerRunner newTaskGroupContainerRunner(
+            Configuration configuration) {
+        TaskGroupContainer taskGroupContainer = new TaskGroupContainer(configuration);
+
+        return new TaskGroupContainerRunner(taskGroupContainer);
+    }
+
     @Override
     public void dealFailedStat(AbstractContainerCommunicator frameworkCollector, Throwable throwable) {
         this.taskGroupContainerExecutorService.shutdownNow();
@@ -49,12 +60,5 @@ public abstract class ProcessInnerScheduler extends AbstractScheduler {
                 "job killed status");
     }
 
-
-    private TaskGroupContainerRunner newTaskGroupContainerRunner(
-            Configuration configuration) {
-        TaskGroupContainer taskGroupContainer = new TaskGroupContainer(configuration);
-
-        return new TaskGroupContainerRunner(taskGroupContainer);
-    }
 
 }

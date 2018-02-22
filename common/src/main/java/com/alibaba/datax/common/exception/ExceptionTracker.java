@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 public final class ExceptionTracker {
+
     public static final int STRING_BUFFER = 1024;
 
     public static String trace(Throwable ex) {

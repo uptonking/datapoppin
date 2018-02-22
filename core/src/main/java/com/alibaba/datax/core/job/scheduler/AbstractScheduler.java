@@ -15,9 +15,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+/**
+ * 调度器抽象类
+ */
 public abstract class AbstractScheduler {
-    private static final Logger LOG = LoggerFactory
-            .getLogger(AbstractScheduler.class);
+
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractScheduler.class);
 
     private ErrorRecordChecker errorLimit;
 
@@ -25,13 +28,14 @@ public abstract class AbstractScheduler {
 
     private Long jobId;
 
+    public AbstractScheduler(AbstractContainerCommunicator containerCommunicator) {
+        this.containerCommunicator = containerCommunicator;
+    }
+
     public Long getJobId() {
         return jobId;
     }
 
-    public AbstractScheduler(AbstractContainerCommunicator containerCommunicator) {
-        this.containerCommunicator = containerCommunicator;
-    }
 
     public void schedule(List<Configuration> configurations) {
         Validate.notNull(configurations,
@@ -46,9 +50,7 @@ public abstract class AbstractScheduler {
 
         errorLimit = new ErrorRecordChecker(configurations.get(0));
 
-        /**
-         * 给 taskGroupContainer 的 Communication 注册
-         */
+        // 给 taskGroupContainer 的 Communication 注册
         this.containerCommunicator.registerCommunication(configurations);
 
         int totalTasks = calculateTaskCount(configurations);
@@ -131,5 +133,5 @@ public abstract class AbstractScheduler {
 //        return jobInfo.getData() == State.KILLING.value();
 //    }
 
-    protected  abstract  boolean isJobKilling(Long jobId);
+    protected abstract boolean isJobKilling(Long jobId);
 }

@@ -11,6 +11,7 @@
     <packaging>jar</packaging>
 
     <name>datax-transformer</name>
+    <description>作为ETL过程中数据转换的工具，如列裁剪、列转换，仅依赖datax-common</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -38,8 +39,8 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <encoding>${project-sourceEncoding}</encoding>
                 </configuration>
             </plugin>

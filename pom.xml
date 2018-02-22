@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.alibaba.datax</groupId>
     <artifactId>datax-all</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <dependencies>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-core</artifactId>
-            <version>1.3</version>
-        </dependency>
-    </dependencies>
-
     <name>datax-all</name>
     <packaging>pom</packaging>
 
@@ -23,15 +17,19 @@
         <commons-cli-version>1.2</commons-cli-version>
         <fastjson-version>1.1.46.sec01</fastjson-version>
         <guava-version>16.0.1</guava-version>
-        <diamond.version>3.7.2.1-SNAPSHOT</diamond.version>
 
         <!--slf4j 1.7.10 和 logback-classic 1.0.13 是好基友 -->
         <slf4j-api-version>1.7.10</slf4j-api-version>
         <logback-classic-version>1.0.13</logback-classic-version>
         <commons-io-version>2.4</commons-io-version>
         <junit-version>4.11</junit-version>
-        <tddl.version>5.1.22-1</tddl.version>
-        <swift-version>1.0.0</swift-version>
+
+        <!--diamond是taobao内部使用的配置管理系统-->
+        <!--<diamond.version>3.7.2.1-SNAPSHOT</diamond.version>-->
+
+        <!--tddl主要用于解决分库分表场景下的访问路由以及异构数据库之间的数据同步-->
+        <!--<tddl.version>5.1.22-1</tddl.version>-->
+        <!--<swift-version>1.0.0</swift-version>-->
 
         <project-sourceEncoding>UTF-8</project-sourceEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -46,40 +44,34 @@
 
         <!-- reader -->
         <module>mysqlreader</module>
-        <module>drdsreader</module>
-        <module>sqlserverreader</module>
         <module>postgresqlreader</module>
         <module>oraclereader</module>
-        <module>odpsreader</module>
-        <module>otsreader</module>
-        <module>otsstreamreader</module>
+        <module>sqlserverreader</module>
+        <module>rdbmsreader</module>
+
         <module>txtfilereader</module>
         <module>hdfsreader</module>
         <module>streamreader</module>
-        <module>ossreader</module>
         <module>ftpreader</module>
+
         <module>mongodbreader</module>
-        <module>rdbmsreader</module>
         <module>hbase11xreader</module>
         <module>hbase094xreader</module>
 
         <!-- writer -->
         <module>mysqlwriter</module>
-        <module>drdswriter</module>
-        <module>odpswriter</module>
-        <module>txtfilewriter</module>
-        <module>ftpwriter</module>
-        <module>hdfswriter</module>
-        <module>streamwriter</module>
-        <module>otswriter</module>
+        <module>postgresqlwriter</module>
         <module>oraclewriter</module>
         <module>sqlserverwriter</module>
-        <module>postgresqlwriter</module>
-        <module>osswriter</module>
-        <module>mongodbwriter</module>
-        <module>adswriter</module>
-        <module>ocswriter</module>
         <module>rdbmswriter</module>
+
+        <module>txtfilewriter</module>
+        <module>hdfswriter</module>
+        <module>streamwriter</module>
+        <module>ftpwriter</module>
+
+        <module>mongodbwriter</module>
+
         <module>hbase11xwriter</module>
         <module>hbase094xwriter</module>
         <module>hbase11xsqlwriter</module>
@@ -88,6 +80,21 @@
         <!-- common support module -->
         <module>plugin-rdbms-util</module>
         <module>plugin-unstructured-storage-util</module>
+
+        <!--
+         <module>ossreader</module>
+         <module>odpsreader</module>
+         <module>drdsreader</module>
+         <module>otsreader</module>
+         <module>otsstreamreader</module>
+
+         <module>drdswriter</module>
+         <module>odpswriter</module>
+         <module>osswriter</module>
+         <module>otswriter</module>
+         <module>adswriter</module>
+         <module>ocswriter</module>
+        -->
     </modules>
 
     <dependencyManagement>
@@ -124,34 +131,6 @@
             </dependency>
 
             <dependency>
-                <groupId>com.taobao.tddl</groupId>
-                <artifactId>tddl-client</artifactId>
-                <version>${tddl.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.google.guava</groupId>
-                        <artifactId>guava</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.taobao.diamond</groupId>
-                        <artifactId>diamond-client</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <dependency>
-                <groupId>com.taobao.diamond</groupId>
-                <artifactId>diamond-client</artifactId>
-                <version>${diamond.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.alibaba.search.swift</groupId>
-                <artifactId>swift_client</artifactId>
-                <version>${swift-version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${junit-version}</version>
@@ -166,30 +145,48 @@
         </dependencies>
     </dependencyManagement>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <version>1.3</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <!--默认执行的的是maven-assembly-plugin:2.2-beta-5:single，下面指定版本2.5.5会报错-->
+                <version>2.2-beta-5</version>
                 <configuration>
                     <finalName>datax</finalName>
+                    <!--指定定制化打包方式文件-->
                     <descriptors>
                         <descriptor>package.xml</descriptor>
                     </descriptors>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>make-assembly</id>
+                        <!--The identifier of this execution for labelling the goals during the build-->
+                        <id>datax-all-make-assembly</id>
+                        <!--The build lifecycle phase to bind the goals in this execution to-->
                         <phase>package</phase>
+                        <!--<goals>-->
+                        <!--<goal>assembly</goal>-->
+                        <!--</goals>-->
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>3.5.1</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <encoding>${project-sourceEncoding}</encoding>
                 </configuration>
             </plugin>

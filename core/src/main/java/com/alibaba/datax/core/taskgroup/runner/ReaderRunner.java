@@ -9,9 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by jingxing on 14-9-1.
- * <p/>
+ * 读执行器
  * 单个slice的reader执行调用
+ * <p>
+ * Created by jingxing on 14-9-1.
  */
 public class ReaderRunner extends AbstractRunner implements Runnable {
 
@@ -89,7 +90,7 @@ public class ReaderRunner extends AbstractRunner implements Runnable {
         }
     }
 
-    public void shutdown(){
+    public void shutdown() {
         recordSender.shutdown();
     }
 }

@@ -9,6 +9,7 @@
 
     <artifactId>datax-core</artifactId>
     <name>datax-core</name>
+    <description>datax核心架构，只依赖datax-transformer</description>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -22,6 +23,11 @@
                     <groupId>org.slf4j</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.3.2</version>
         </dependency>
         <dependency>
             <groupId>commons-configuration</groupId>
@@ -87,11 +93,7 @@
             <version>1.4.10</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.3.2</version>
-        </dependency>
+
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
@@ -101,6 +103,8 @@
 
     <build>
         <plugins>
+
+            <!--maven默认打包插件，用于生成META-INF/MANIFEST.MF文件的部分内容-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -113,6 +117,7 @@
                 </configuration>
             </plugin>
 
+            <!--定制化打包成肥jar,不但包含项目中代码和资源，还包含所有依赖包。所以可直接通过java -jar来运行-->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
@@ -122,11 +127,11 @@
                         </manifest>
                     </archive>
                     <finalName>datax</finalName>
+                    <!--指定定制化打包文件位置，不推荐用descriptorRefs内置的bin, jar-with-dependencies-->
                     <descriptors>
                         <descriptor>src/main/assembly/package.xml</descriptor>
                     </descriptors>
                 </configuration>
-
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -136,12 +141,13 @@
                     </execution>
                 </executions>
             </plugin>
+
             <!-- compiler plugin -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <encoding>${project-sourceEncoding}</encoding>
                 </configuration>
             </plugin>

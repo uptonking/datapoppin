@@ -1,5 +1,9 @@
 package com.alibaba.datax.dataxservice.face.domain.enums;
 
+/**
+ * 作业运行状态，7种
+ */
+@SuppressWarnings("all")
 public enum State implements EnumVal {
 
     SUBMITTING(10),
@@ -10,17 +14,22 @@ public enum State implements EnumVal {
     FAILED(60),
     SUCCEEDED(70);
 
+    /**
+     * 枚举类的实例变量
+     */
+    //    int value;
+    private final int value;
 
-    /* 一定会被初始化的 */
-    int value;
-
-    State(int value) {
+    /**
+     * 枚举类设计成不可变类，需要在构造器中为实例变量设置初始值
+     */
+    private State(int value) {
         this.value = value;
     }
 
     @Override
     public int value() {
-        return value;
+        return this.value;
     }
 
 
@@ -32,4 +41,10 @@ public enum State implements EnumVal {
         return !isFinished();
     }
 
+    @Override
+    public String toString() {
+        return "State{" +
+                "value=" + value +
+                '}';
+    }
 }

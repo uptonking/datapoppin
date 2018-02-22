@@ -3,7 +3,9 @@ package com.alibaba.datax.core.transport.transformer;
 import com.alibaba.datax.transformer.ComplexTransformer;
 
 /**
- * 单实例.
+ * 设置转换器
+ * <p>
+ * 单实例
  * Created by liqiang on 16/3/9.
  */
 public class TransformerInfo {

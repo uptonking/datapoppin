@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 /**
- * no comments.
+ * 转换并交换
  * Created by liqiang on 16/3/9.
  */
 public abstract class TransformerExchanger {

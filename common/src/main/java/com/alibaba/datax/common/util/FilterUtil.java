@@ -4,8 +4,8 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 /**
- * 提供从 List<String> 中根据 regular 过滤的通用工具(返回值已经去重). 使用场景，比如：odpsreader
- * 的分区筛选，hdfsreader/txtfilereader的路径筛选等
+ * 提供从 List<String> 中根据 regular 过滤的通用工具(返回值已经去重). 使用场景，
+ * 比如：odpsreader的分区筛选，hdfsreader/txtfilereader的路径筛选等
  */
 public final class FilterUtil {
 

@@ -13,18 +13,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 自定义类加载器，加载任意位置的Jar包
  * 提供Jar隔离的加载机制，会把传入的路径、及其子路径、以及路径中的jar文件加入到class path。
+ * <p>
+ * URLClassLoader exts SecureClassLoader exts ClassLoader
+ * ClassLoader只能加载classpath下面的类，而URLClassLoader可以加载任意路径下的类
  */
 public class JarLoader extends URLClassLoader {
-    public JarLoader(String[] paths) {
-        this(paths, JarLoader.class.getClassLoader());
-    }
 
     public JarLoader(String[] paths, ClassLoader parent) {
         super(getURLs(paths), parent);
     }
 
+    public JarLoader(String[] paths) {
+        this(paths, JarLoader.class.getClassLoader());
+    }
+
     private static URL[] getURLs(String[] paths) {
+
         Validate.isTrue(null != paths && 0 != paths.length,
                 "jar包路径不能为空.");
 
@@ -47,11 +53,13 @@ public class JarLoader extends URLClassLoader {
             return;
         }
 
+        ///获取目录，不是文件
         File current = new File(path);
         if (!current.exists() || !current.isDirectory()) {
             return;
         }
 
+        ///遍历目录文件
         for (File child : current.listFiles()) {
             if (!child.isDirectory()) {
                 continue;
@@ -70,7 +78,7 @@ public class JarLoader extends URLClassLoader {
         Validate.isTrue(jarPath.exists() && jarPath.isDirectory(),
                 "jar包路径必须存在且为目录.");
 
-		/* set filter */
+        /* set filter */
         FileFilter jarFilter = new FileFilter() {
             @Override
             public boolean accept(File pathname) {
@@ -78,7 +86,7 @@ public class JarLoader extends URLClassLoader {
             }
         };
 
-		/* iterate all jar */
+        /* iterate all jar */
         File[] allJars = new File(path).listFiles(jarFilter);
         List<URL> jarURLs = new ArrayList<URL>(allJars.length);
 

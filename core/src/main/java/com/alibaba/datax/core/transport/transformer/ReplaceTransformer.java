@@ -9,10 +9,11 @@ import com.alibaba.datax.transformer.Transformer;
 import java.util.Arrays;
 
 /**
- * no comments.
+ * 内置的字符串替换转换器实现类
  * Created by liqiang on 16/3/4.
  */
 public class ReplaceTransformer extends Transformer {
+
     public ReplaceTransformer() {
         setTransformerName("dx_replace");
     }

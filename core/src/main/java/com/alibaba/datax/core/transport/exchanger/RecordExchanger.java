@@ -32,6 +32,9 @@ import com.alibaba.datax.core.util.container.CoreConstant;
 
 import java.util.List;
 
+/**
+ * 行级别的转换并交换
+ */
 public class RecordExchanger extends TransformerExchanger implements RecordSender, RecordReceiver {
 
 	private Channel channel;

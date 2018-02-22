@@ -128,7 +128,8 @@ public final class RangeSplitUtil {
     }
 
     /**
-     * 把BigInteger 转换为 String.注意：radix 和 basic 范围都为[1,128], radix + basic 的范围也必须在[1,128].
+     * 把BigInteger 转换为 String.
+     * 注意：radix 和 basic 范围都为[1,128], radix + basic 的范围也必须在[1,128].
      */
     private static String bigIntegerToString(BigInteger bigInteger, int radix) {
         if (null == bigInteger) {

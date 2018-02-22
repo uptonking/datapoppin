@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 默认的一行记录
  * Created by jingxing on 14-8-24.
  */
 

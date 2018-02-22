@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * no comments.
+ * groovy转换器初始化
  * Created by liqiang on 16/3/4.
  */
 public class GroovyTransformer extends Transformer {
