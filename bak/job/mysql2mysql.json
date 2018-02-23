@@ -1,0 +1,77 @@
+{
+  "job": {
+    "setting": {
+      "speed": {
+        "channel": 1
+      },
+      "errorLimit": {
+        "record": 0,
+        "percentage": 0.02
+      }
+    },
+    "content": [
+      {
+        "reader": {
+          "name": "mysqlreader",
+          "parameter": {
+            "username": "root",
+            "password": "111111",
+            "column": [
+              "PRODUCT_ID",
+              "TIME_ID",
+              "CUSTOMER_ID",
+              "PROMOTION_ID",
+              "STORE_ID",
+              "STORE_SALES",
+              "STORE_COST",
+              "UNIT_SALES"
+            ],
+            "connection": [
+              {
+                "table": [
+                  "sales_fact_sample"
+                ],
+                "jdbcUrl": [
+                  "jdbc:mysql://127.0.0.1:3306/foodmart2"
+                ]
+              }
+            ]
+          }
+        },
+        "writer": {
+          "name": "mysqlwriter",
+          "parameter": {
+            "writeMode": "insert",
+            "username": "root",
+            "password": "111111",
+            "column": [
+              "PRODUCT_ID",
+              "TIME_ID",
+              "CUSTOMER_ID",
+              "PROMOTION_ID",
+              "STORE_ID",
+              "STORE_SALES",
+              "STORE_COST",
+              "UNIT_SALES"
+            ],
+            "session": [
+              "set session sql_mode='ANSI'"
+            ],
+            "preSql": [
+              "delete from sales_fact_sample"
+            ],
+            "connection": [
+              {
+                "jdbcUrl": "jdbc:mysql://127.0.0.1:3306/testdb?useUnicode=true",
+                "table": [
+                  "sales_fact_sample"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}
+

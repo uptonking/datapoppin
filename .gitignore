@@ -3,5 +3,5 @@
 .idea/
 *.iml
 
-bak/
+#bak/
 target

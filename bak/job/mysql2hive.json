@@ -1,0 +1,90 @@
+{
+  "job": {
+    "setting": {
+      "speed": {
+        "channel": 1
+      },
+      "errorLimit": {
+        "record": 0,
+        "percentage": 0.02
+      }
+    },
+    "content": [
+      {
+        "reader": {
+          "name": "mysqlreader",
+          "parameter": {
+            "username": "root",
+            "password": "111111",
+            "column": [
+              "PRODUCT_ID",
+              "TIME_ID",
+              "CUSTOMER_ID",
+              "PROMOTION_ID",
+              "STORE_ID",
+              "STORE_SALES",
+              "STORE_COST",
+              "UNIT_SALES"
+            ],
+            "connection": [
+              {
+                "table": [
+                  "sales_fact_sample"
+                ],
+                "jdbcUrl": [
+                  "jdbc:mysql://127.0.0.1:3306/foodmart2"
+                ]
+              }
+            ]
+          }
+        },
+        "writer": {
+          "name": "hdfswriter",
+          "parameter": {
+            "defaultFS": "hdfs://localhost:9000",
+            "fileType": "text",
+            "path": "/user/hive/warehouse/hellodb.db/sales_fact_sample",
+            "fileName": "sales_fact_temp",
+            "column": [
+              {
+                "name": "PRODUCT_ID",
+                "type": "BIGINT"
+              },
+              {
+                "name": "TIME_ID",
+                "type": "BIGINT"
+              },
+              {
+                "name": "CUSTOMER_ID",
+                "type": "BIGINT"
+              },
+              {
+                "name": "PROMOTION_ID",
+                "type": "BIGINT"
+              },
+              {
+                "name": "STORE_ID",
+                "type": "BIGINT"
+              },
+              {
+                "name": "STORE_SALES",
+                "type": "DOUBLE"
+              },
+              {
+                "name": "STORE_COST",
+                "type": "DOUBLE"
+              },
+              {
+                "name": "UNIT_SALES",
+                "type": "DOUBLE"
+              }
+            ],
+            "writeMode": "nonConflict",
+            "fieldDelimiter": ","
+
+          }
+        }
+      }
+    ]
+  }
+}
