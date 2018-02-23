@@ -15,7 +15,6 @@ DataX本身作为数据同步框架，将不同数据源的同步抽象为从源
 ##### 请参考：[DataX-Introduction](https://github.com/alibaba/DataX/blob/master/introduction.md)
 
 
-
 # Quick Start
 
 ##### Download [DataX下载地址](http://datax-opensource.oss-cn-hangzhou.aliyuncs.com/datax.tar.gz)
