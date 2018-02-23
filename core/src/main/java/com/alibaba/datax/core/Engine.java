@@ -46,6 +46,15 @@ public class Engine {
      */
     public static void entry(final String[] args) throws Throwable {
 
+        /// print input args
+        if (args != null && args.length != 0) {
+            LOG.info("================Engine entry args is \n");
+            for (String arg : args) {
+                LOG.info(arg);
+            }
+            LOG.info("================args print end================ \n");
+        }
+
         /// 定义命令行输入参数
         Options options = new Options();
         options.addOption("job", true, "Job config.");
@@ -94,7 +103,7 @@ public class Engine {
         }
 
         LOG.info("\n" + Engine.filterJobConfiguration(configuration) + "\n");
-        LOG.debug("Engine line97" + "\n" + configuration.toJSON());
+        LOG.debug("Engine line106" + "\n" + configuration.toJSON());
 
         ConfigurationValidate.doValidate(configuration);
 
