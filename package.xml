@@ -77,6 +77,13 @@
             <outputDirectory>datax</outputDirectory>
         </fileSet>
         <fileSet>
+            <directory>spreadsheetreader/target/datax/</directory>
+            <includes>
+                <include>**/*.*</include>
+            </includes>
+            <outputDirectory>datax</outputDirectory>
+        </fileSet>
+        <fileSet>
             <directory>mongodbreader/target/datax/</directory>
             <includes>
                 <include>**/*.*</include>
@@ -173,6 +180,13 @@
 
         <fileSet>
             <directory>txtfilewriter/target/datax/</directory>
+            <includes>
+                <include>**/*.*</include>
+            </includes>
+            <outputDirectory>datax</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>spreadsheetwriter/target/datax/</directory>
             <includes>
                 <include>**/*.*</include>
             </includes>

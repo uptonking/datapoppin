@@ -5,7 +5,9 @@ import com.alibaba.datax.core.statistics.container.communicator.AbstractContaine
 import org.apache.commons.lang.Validate;
 
 /**
- * 执行容器的抽象类，持有该容器全局的配置 configuration
+ * 作业执行容器的抽象类，持有该容器全局的配置 configuration
+ * <p>
+ * 实现类有JobContainer，TaskGroupContainer
  */
 public abstract class AbstractContainer {
 
@@ -14,9 +16,7 @@ public abstract class AbstractContainer {
     protected AbstractContainerCommunicator containerCommunicator;
 
     public AbstractContainer(Configuration configuration) {
-
         Validate.notNull(configuration, "Configuration can not be null.");
-
         this.configuration = configuration;
     }
 

@@ -1,9 +1,11 @@
 package com.alibaba.datax.plugin.unstructuredstorage.reader;
 
 /**
+ * 文本数据行列元信息相关常量
  * Created by haiwei.luo on 14-12-5.
  */
 public class Key {
+
 	public static final String COLUMN = "column";
 
 	public static final String ENCODING = "encoding";

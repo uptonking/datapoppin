@@ -6,19 +6,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * refer:http://blog.csdn.net/ring0hx/article/details/6152528
- * <p/>
+ * 数据库类型枚举类
+ *
+ * @see <a href="http://blog.csdn.net/ring0hx/article/details/6152528">常用数据库 JDBC URL 格式</a>
  */
 public enum DataBaseType {
+
     MySql("mysql", "com.mysql.jdbc.Driver"),
-    Tddl("mysql", "com.mysql.jdbc.Driver"),
-    DRDS("drds", "com.mysql.jdbc.Driver"),
     Oracle("oracle", "oracle.jdbc.OracleDriver"),
     SQLServer("sqlserver", "com.microsoft.sqlserver.jdbc.SQLServerDriver"),
     PostgreSQL("postgresql", "org.postgresql.Driver"),
     RDBMS("rdbms", "com.alibaba.datax.plugin.rdbms.util.DataBaseType"),
     DB2("db2", "com.ibm.db2.jcc.DB2Driver"),
-    ADS("ads","com.mysql.jdbc.Driver");
+    ADS("ads", "com.mysql.jdbc.Driver"),
+    Tddl("mysql", "com.mysql.jdbc.Driver"),
+    DRDS("drds", "com.mysql.jdbc.Driver");
 
 
     private String typeName;
@@ -53,7 +55,7 @@ public enum DataBaseType {
             case DB2:
                 break;
             case PostgreSQL:
-            	break;
+                break;
             case RDBMS:
                 break;
             default:
@@ -90,7 +92,7 @@ public enum DataBaseType {
             case DB2:
                 break;
             case PostgreSQL:
-            	break;
+                break;
             case RDBMS:
                 break;
             default:
@@ -117,7 +119,7 @@ public enum DataBaseType {
                 break;
             case DB2:
             case PostgreSQL:
-            	break;
+                break;
             default:
                 throw DataXException.asDataXException(DBUtilErrorCode.UNSUPPORTED_TYPE, "unsupported database type.");
         }
@@ -187,6 +189,7 @@ public enum DataBaseType {
         }
         return null;
     }
+
     public String getTypeName() {
         return typeName;
     }

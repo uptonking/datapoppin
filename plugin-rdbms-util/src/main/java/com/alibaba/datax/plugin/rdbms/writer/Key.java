@@ -1,6 +1,10 @@
 package com.alibaba.datax.plugin.rdbms.writer;
 
+/**
+ * 读相关的配置名编码常量
+ */
 public final class Key {
+
     public final static String JDBC_URL = "jdbcUrl";
 
     public final static String USERNAME = "username";

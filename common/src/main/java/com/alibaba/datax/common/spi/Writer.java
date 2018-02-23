@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Writer抽象类
  * <p>
- * 每个Writer插件需要实现Writer类，并在其内部实现Job、Task两个内部类。
+ * 每个Writer插件需要实现Writer类，并在其内部实现Job、Task两个内部类
  */
 public abstract class Writer extends BaseObject {
 
@@ -22,7 +22,7 @@ public abstract class Writer extends BaseObject {
      */
     public abstract static class Job extends AbstractJobPlugin {
         /**
-         * 切分任务。<br>
+         * 切分任务<br>
          *
          * @param mandatoryNumber 为了做到Reader、Writer任务数对等，这里要求Writer插件必须按照源端的切分数进行切分。否则框架报错！
          */

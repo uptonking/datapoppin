@@ -8,9 +8,12 @@ import java.util.zip.ZipInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * zip压缩文件读取
+ */
 public class ZipCycleInputStream extends InputStream {
-    private static final Logger LOG = LoggerFactory
-            .getLogger(ZipCycleInputStream.class);
+
+    private static final Logger LOG = LoggerFactory.getLogger(ZipCycleInputStream.class);
 
     private ZipInputStream zipInputStream;
     private ZipEntry currentZipEntry;
@@ -27,15 +30,13 @@ public class ZipCycleInputStream extends InputStream {
             if (null == this.currentZipEntry) {
                 return -1;
             } else {
-                LOG.info(String.format("Validate zipEntry with name: %s",
-                        this.currentZipEntry.getName()));
+                LOG.info(String.format("Validate zipEntry with name: %s", this.currentZipEntry.getName()));
             }
         }
 
         // 不支持zip下的嵌套, 对于目录跳过
         if (this.currentZipEntry.isDirectory()) {
-            LOG.warn(String.format("meet a directory %s, ignore...",
-                    this.currentZipEntry.getName()));
+            LOG.warn(String.format("meet a directory %s, ignore...", this.currentZipEntry.getName()));
             this.currentZipEntry = null;
             return this.read();
         }

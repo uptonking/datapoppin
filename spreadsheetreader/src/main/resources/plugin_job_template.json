@@ -1,0 +1,9 @@
+{
+    "name": "spreadsheetreader",
+    "parameter": {
+        "path": [],
+        "encoding": "",
+        "column": [],
+        "fieldDelimiter": ""
+    }
+}

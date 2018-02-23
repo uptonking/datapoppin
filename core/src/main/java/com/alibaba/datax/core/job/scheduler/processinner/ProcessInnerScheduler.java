@@ -14,7 +14,8 @@ import java.util.concurrent.Executors;
 
 /**
  * 调度器抽象类
- * 主要用于任务组启动，失败状态抛出异常
+ * <p>
+ * 主要用于任务组执行，失败状态抛出异常
  */
 public abstract class ProcessInnerScheduler extends AbstractScheduler {
 
@@ -26,8 +27,9 @@ public abstract class ProcessInnerScheduler extends AbstractScheduler {
 
     @Override
     public void startAllTaskGroup(List<Configuration> configurations) {
-        this.taskGroupContainerExecutorService = Executors
-                .newFixedThreadPool(configurations.size());
+
+        //创建固定线程数量的线程池
+        this.taskGroupContainerExecutorService = Executors.newFixedThreadPool(configurations.size());
 
         for (Configuration taskGroupConfiguration : configurations) {
             TaskGroupContainerRunner taskGroupContainerRunner = newTaskGroupContainerRunner(taskGroupConfiguration);
@@ -37,8 +39,7 @@ public abstract class ProcessInnerScheduler extends AbstractScheduler {
         this.taskGroupContainerExecutorService.shutdown();
     }
 
-    private TaskGroupContainerRunner newTaskGroupContainerRunner(
-            Configuration configuration) {
+    private TaskGroupContainerRunner newTaskGroupContainerRunner(Configuration configuration) {
         TaskGroupContainer taskGroupContainer = new TaskGroupContainer(configuration);
 
         return new TaskGroupContainerRunner(taskGroupContainer);
@@ -47,18 +48,14 @@ public abstract class ProcessInnerScheduler extends AbstractScheduler {
     @Override
     public void dealFailedStat(AbstractContainerCommunicator frameworkCollector, Throwable throwable) {
         this.taskGroupContainerExecutorService.shutdownNow();
-        throw DataXException.asDataXException(
-                FrameworkErrorCode.PLUGIN_RUNTIME_ERROR, throwable);
+        throw DataXException.asDataXException(FrameworkErrorCode.PLUGIN_RUNTIME_ERROR, throwable);
     }
-
 
     @Override
     public void dealKillingStat(AbstractContainerCommunicator frameworkCollector, int totalTasks) {
         //通过进程退出返回码标示状态
         this.taskGroupContainerExecutorService.shutdownNow();
-        throw DataXException.asDataXException(FrameworkErrorCode.KILLED_EXIT_VALUE,
-                "job killed status");
+        throw DataXException.asDataXException(FrameworkErrorCode.KILLED_EXIT_VALUE, "job killed status");
     }
-
 
 }

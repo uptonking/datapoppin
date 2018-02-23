@@ -24,6 +24,9 @@ public class MemoryChannel extends Channel {
 
     private int bufferSize = 0;
 
+    /**
+     * 保存内存中数据字节数大小
+     */
     private AtomicInteger memoryBytes = new AtomicInteger(0);
 
     private ArrayBlockingQueue<Record> queue = null;
@@ -38,25 +41,32 @@ public class MemoryChannel extends Channel {
         this.bufferSize = configuration.getInt(CoreConstant.DATAX_CORE_TRANSPORT_EXCHANGER_BUFFERSIZE);
 
         lock = new ReentrantLock();
+        //不足的条件
         notInsufficient = lock.newCondition();
+        //非空的条件
         notEmpty = lock.newCondition();
     }
 
+    /**
+     * 关闭传输通道的方法
+     * 关闭之前，加入终止行标识
+     */
     @Override
     public void close() {
         super.close();
         try {
+
             this.queue.put(TerminateRecord.get());
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
     }
 
-    @Override
-    public void clear() {
-        this.queue.clear();
-    }
-
+    /**
+     * 单行记录加入内存queue
+     *
+     * @param r 一行
+     */
     @Override
     protected void doPush(Record r) {
         try {
@@ -69,10 +79,19 @@ public class MemoryChannel extends Channel {
         }
     }
 
+    /**
+     * 多行记录加入内存queue
+     * <p>
+     * 有加锁
+     *
+     * @param rs 多行
+     */
     @Override
     protected void doPushAll(Collection<Record> rs) {
         try {
             long startTime = System.nanoTime();
+
+            //优先响应中断，再获取锁
             lock.lockInterruptibly();
             int bytes = getRecordBytes(rs);
             while (memoryBytes.get() + bytes > this.byteCapacity || rs.size() > this.queue.remainingCapacity()) {
@@ -90,6 +109,11 @@ public class MemoryChannel extends Channel {
         }
     }
 
+    /**
+     * 从内存queue中取出一行
+     *
+     * @return 一行
+     */
     @Override
     protected Record doPull() {
         try {
@@ -104,13 +128,23 @@ public class MemoryChannel extends Channel {
         }
     }
 
+    /**
+     * 从内存queue中取出多行
+     * <p>
+     * 有加锁
+     *
+     * @param rs 要取出的多行
+     */
     @Override
     protected void doPullAll(Collection<Record> rs) {
         assert rs != null;
         rs.clear();
+
         try {
             long startTime = System.nanoTime();
+
             lock.lockInterruptibly();
+
             while (this.queue.drainTo(rs, bufferSize) <= 0) {
                 notEmpty.await(200L, TimeUnit.MILLISECONDS);
             }
@@ -118,6 +152,7 @@ public class MemoryChannel extends Channel {
             int bytes = getRecordBytes(rs);
             memoryBytes.addAndGet(-bytes);
             notInsufficient.signalAll();
+
         } catch (InterruptedException e) {
             throw DataXException.asDataXException(
                     FrameworkErrorCode.RUNTIME_ERROR, e);
@@ -126,6 +161,12 @@ public class MemoryChannel extends Channel {
         }
     }
 
+    /**
+     * 计算多行数据的总大小
+     *
+     * @param rs 多行
+     * @return bytes
+     */
     private int getRecordBytes(Collection<Record> rs) {
         int bytes = 0;
         for (Record r : rs) {
@@ -142,6 +183,11 @@ public class MemoryChannel extends Channel {
     @Override
     public boolean isEmpty() {
         return this.queue.isEmpty();
+    }
+
+    @Override
+    public void clear() {
+        this.queue.clear();
     }
 
 }

@@ -13,9 +13,12 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 数据库连接信息初始配置预处理工具类
+ */
 public final class OriginalConfPretreatmentUtil {
-    private static final Logger LOG = LoggerFactory
-            .getLogger(OriginalConfPretreatmentUtil.class);
+
+    private static final Logger LOG = LoggerFactory.getLogger(OriginalConfPretreatmentUtil.class);
 
     public static DataBaseType DATABASE_TYPE;
 
@@ -99,10 +102,10 @@ public final class OriginalConfPretreatmentUtil {
         } else {
             boolean isPreCheck = originalConfig.getBool(Key.DRYRUN, false);
             List<String> allColumns;
-            if (isPreCheck){
-                allColumns = DBUtil.getTableColumnsByConn(DATABASE_TYPE,connectionFactory.getConnecttionWithoutRetry(), oneTable, connectionFactory.getConnectionInfo());
-            }else{
-                allColumns = DBUtil.getTableColumnsByConn(DATABASE_TYPE,connectionFactory.getConnecttion(), oneTable, connectionFactory.getConnectionInfo());
+            if (isPreCheck) {
+                allColumns = DBUtil.getTableColumnsByConn(DATABASE_TYPE, connectionFactory.getConnecttionWithoutRetry(), oneTable, connectionFactory.getConnectionInfo());
+            } else {
+                allColumns = DBUtil.getTableColumnsByConn(DATABASE_TYPE, connectionFactory.getConnecttion(), oneTable, connectionFactory.getConnectionInfo());
             }
 
             LOG.info("table:[{}] all columns:[\n{}\n].", oneTable,
@@ -122,7 +125,7 @@ public final class OriginalConfPretreatmentUtil {
                 ListUtil.makeSureNoValueDuplicate(userConfiguredColumns, false);
 
                 // 检查列是否都为数据库表中正确的列（通过执行一次 select column from table 进行判断）
-                DBUtil.getColumnMetaData(connectionFactory.getConnecttion(), oneTable,StringUtils.join(userConfiguredColumns, ","));
+                DBUtil.getColumnMetaData(connectionFactory.getConnecttion(), oneTable, StringUtils.join(userConfiguredColumns, ","));
             }
         }
     }
@@ -160,21 +163,23 @@ public final class OriginalConfPretreatmentUtil {
             forceUseUpdate = true;
         }
 
-        String writeDataSqlTemplate = WriterUtil.getWriteTemplate(columns, valueHolders, writeMode,dataBaseType, forceUseUpdate);
+        String writeDataSqlTemplate = WriterUtil.getWriteTemplate(columns, valueHolders, writeMode, dataBaseType, forceUseUpdate);
 
         LOG.info("Write data [\n{}\n], which jdbcUrl like:[{}]", writeDataSqlTemplate, jdbcUrl);
 
         originalConfig.set(Constant.INSERT_OR_REPLACE_TEMPLATE_MARK, writeDataSqlTemplate);
     }
 
+    /**
+     * OB10 数据库连接工具特殊判断
+     */
     public static boolean isOB10(String jdbcUrl) {
+
         //ob10的处理
         if (jdbcUrl.startsWith(com.alibaba.datax.plugin.rdbms.writer.Constant.OB10_SPLIT_STRING)) {
             String[] ss = jdbcUrl.split(com.alibaba.datax.plugin.rdbms.writer.Constant.OB10_SPLIT_STRING_PATTERN);
             if (ss.length != 3) {
-                throw DataXException
-                        .asDataXException(
-                                DBUtilErrorCode.JDBC_OB10_ADDRESS_ERROR, "JDBC OB10格式错误，请联系askdatax");
+                throw DataXException.asDataXException(DBUtilErrorCode.JDBC_OB10_ADDRESS_ERROR, "JDBC OB10格式错误，请联系askdatax");
             }
             return true;
         }

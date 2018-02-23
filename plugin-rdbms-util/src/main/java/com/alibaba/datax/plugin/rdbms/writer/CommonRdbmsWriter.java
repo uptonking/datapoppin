@@ -24,8 +24,14 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 通用数据库写工具类
+ */
 public class CommonRdbmsWriter {
 
+    /**
+     * 写作业 静态内部类
+     */
     public static class Job {
         private DataBaseType dataBaseType;
 
@@ -170,9 +176,12 @@ public class CommonRdbmsWriter {
 
     }
 
+    /**
+     * 写任务 静态内部类
+     */
     public static class Task {
-        protected static final Logger LOG = LoggerFactory
-                .getLogger(Task.class);
+
+        protected static final Logger LOG = LoggerFactory.getLogger(Task.class);
 
         protected DataBaseType dataBaseType;
         private static final String VALUE_HOLDER = "?";
@@ -189,7 +198,7 @@ public class CommonRdbmsWriter {
         protected int columnNumber = 0;
         protected TaskPluginCollector taskPluginCollector;
 
-        // 作为日志显示信息时，需要附带的通用信息。比如信息所对应的数据库连接等信息，针对哪个表做的操作
+        // 作为日志显示信息时，需要附带的通用信息，比如信息所对应的数据库连接等信息，针对哪个表做的操作
         protected static String BASIC_MESSAGE;
 
         protected static String INSERT_OR_REPLACE_TEMPLATE;

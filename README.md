@@ -1,16 +1,14 @@
-![Datax-logo](https://github.com/alibaba/DataX/blob/master/images/DataX-logo.jpg)
-
-
-
-# DataX
-
-DataX 是阿里巴巴集团内被广泛使用的离线数据同步工具/平台，实现包括 MySQL、Oracle、SqlServer、Postgre、HDFS、Hive、ADS、HBase、TableStore(OTS)、MaxCompute(ODPS)、DRDS 等各种异构数据源之间高效的数据同步功能。
-
+# DataPoppin
+基于DataX的多源数据ETL工具。  
+DataX是阿里巴巴集团内被广泛使用的离线数据同步工具/平台，实现包括 MySQL、Oracle、SqlServer、Postgre、HDFS、Hive、ADS、HBase、TableStore(OTS)、MaxCompute(ODPS)、DRDS 等各种异构数据源之间高效的数据同步功能。
 
 # Features
 
 DataX本身作为数据同步框架，将不同数据源的同步抽象为从源头数据源读取数据的Reader插件，以及向目标端写入数据的Writer插件，理论上DataX框架可以支持任意数据源类型的数据同步工作。同时DataX插件体系作为一套生态系统, 每接入一套新数据源该新加入的数据源即可实现和现有的数据源互通。
 
+# Extension
+- [] excel格式支持，包括.xls   
+- [] 操作ui   
 
 # DataX详细介绍
 
@@ -32,7 +30,7 @@ DataX目前已经有了比较全面的插件体系，主流的RDBMS数据库、N
 
 | 类型           | 数据源        | Reader(读) | Writer(写) |文档|
 | ------------ | ---------- | :-------: | :-------: |:-------: |
-| RDBMS 关系型数据库 | MySQL      |     √     |     √     |[读](https://github.com/alibaba/DataX/blob/master/mysqlreader/doc/mysqlreader.md) 、[写](https://github.com/alibaba/DataX/blob/master/mysqlwriter/doc/mysqlwriter.md)|
+| RDBMS关系型数据库 | MySQL      |     √     |     √     |[读](https://github.com/alibaba/DataX/blob/master/mysqlreader/doc/mysqlreader.md) 、[写](https://github.com/alibaba/DataX/blob/master/mysqlwriter/doc/mysqlwriter.md)|
 |              | Oracle     |     √     |     √     |[读](https://github.com/alibaba/DataX/blob/master/oraclereader/doc/oraclereader.md) 、[写](https://github.com/alibaba/DataX/blob/master/oraclewriter/doc/oraclewriter.md)|
 |              | SQLServer  |     √     |     √     |[读](https://github.com/alibaba/DataX/blob/master/sqlserverreader/doc/sqlserverreader.md) 、[写](https://github.com/alibaba/DataX/blob/master/sqlserverwriter/doc/sqlserverwriter.md)|
 |              | PostgreSQL |     √     |     √     |[读](https://github.com/alibaba/DataX/blob/master/postgresqlreader/doc/postgresqlreader.md) 、[写](https://github.com/alibaba/DataX/blob/master/postgresqlwriter/doc/postgresqlwriter.md)|
@@ -72,38 +70,3 @@ This software is free to use under the Apache License [Apache license](https://g
 # 开源版DataX企业用户
 
 ![Datax-logo](https://github.com/alibaba/DataX/blob/master/images/datax-enterprise-users.jpg)
-
-```
-长期招聘 联系邮箱：hanfa.shf@alibaba-inc.com
-【JAVA开发职位】
-职位名称：JAVA资深开发工程师/专家/高级专家
-工作年限 : 2年以上
-学历要求 : 本科（如果能力靠谱，这些都不是条件）
-期望层级 : P6/P7/P8
-
-岗位描述：
-    1. 负责阿里云大数据平台（数加）的开发设计。 
-    2. 负责面向政企客户的大数据相关产品开发；
-    3. 利用大规模机器学习算法挖掘数据之间的联系，探索数据挖掘技术在实际场景中的产品应用 ；
-    4. 一站式大数据开发平台
-    5. 大数据任务调度引擎
-    6. 任务执行引擎
-    7. 任务监控告警
-    8. 海量异构数据同步
-
-岗位要求：
-    1. 拥有3年以上JAVA Web开发经验；
-    2. 熟悉Java的基础技术体系。包括JVM、类装载、线程、并发、IO资源管理、网络；
-    3. 熟练使用常用Java技术框架、对新技术框架有敏锐感知能力；深刻理解面向对象、设计原则、封装抽象；
-    4. 熟悉HTML/HTML5和JavaScript；熟悉SQL语言；
-    5. 执行力强，具有优秀的团队合作精神、敬业精神；
-    6. 深刻理解设计模式及应用场景者加分；
-    7. 具有较强的问题分析和处理能力、比较强的动手能力，对技术有强烈追求者优先考虑；
-    8. 对高并发、高稳定可用性、高性能、大数据处理有过实际项目及产品经验者优先考虑；
-    9. 有大数据产品、云产品、中间件技术解决方案者优先考虑。
-````
-钉钉用户请扫描以下二维码进行讨论：
-
-![DataX-OpenSource-Dingding](https://raw.githubusercontent.com/alibaba/DataX/master/images/datax-opensource-dingding.png)
-
-

@@ -3,9 +3,11 @@ package com.alibaba.datax.plugin.unstructuredstorage.reader;
 import com.alibaba.datax.common.spi.ErrorCode;
 
 /**
+ * 非结构化数据读取异常 枚举类
  * Created by haiwei.luo on 14-9-20.
  */
 public enum UnstructuredStorageReaderErrorCode implements ErrorCode {
+
 	CONFIG_INVALID_EXCEPTION("UnstructuredStorageReader-00", "您的参数配置错误."),
 	NOT_SUPPORT_TYPE("UnstructuredStorageReader-01","您配置的列类型暂不支持."),
 	REQUIRED_VALUE("UnstructuredStorageReader-02", "您缺失了必须填写的参数值."),

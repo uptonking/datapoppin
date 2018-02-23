@@ -28,6 +28,7 @@ public final class ConfigParser {
      * 指定Job配置路径，ConfigParser会解析Job、Plugin、Core全部信息，并以Configuration返回
      */
     public static Configuration parse(final String jobPath) {
+
         Configuration configuration = ConfigParser.parseJobConfig(jobPath);
 
         configuration.merge(

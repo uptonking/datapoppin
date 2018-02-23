@@ -27,6 +27,7 @@ import java.util.zip.Adler32;
 import java.util.zip.CRC32;
 
 /**
+ * lzo压缩文件读取
  * Created by mingya.wmy on 16/8/26.
  */
 public class ExpandLzopInputStream extends LzopInputStream {
@@ -44,8 +45,7 @@ public class ExpandLzopInputStream extends LzopInputStream {
     protected int readHeader() throws IOException {
         short LZO_LIBRARY_VERSION = 0x2060;
         Log LOG = LogFactory.getLog(LzopInputStream.class);
-        byte[] LZOP_MAGIC = new byte[]{
-                -119, 'L', 'Z', 'O', 0, '\r', '\n', '\032', '\n'};
+        byte[] LZOP_MAGIC = new byte[]{-119, 'L', 'Z', 'O', 0, '\r', '\n', '\032', '\n'};
         byte[] buf = new byte[9];
         readBytes(buf, 0, 9);
         if (!Arrays.equals(buf, LZOP_MAGIC))

@@ -12,8 +12,17 @@ import org.slf4j.LoggerFactory;
 import com.csvreader.CsvWriter;
 
 public class TextCsvWriterManager {
-    public static UnstructuredWriter produceUnstructuredWriter(
-            String fileFormat, char fieldDelimiter, Writer writer) {
+
+    /**
+     * 自动选择并创建文件写插件对象
+     *
+     * @param fileFormat     格式
+     * @param fieldDelimiter 分隔符
+     * @param writer         通用写插件
+     * @return 写插件对象
+     */
+    public static UnstructuredWriter produceUnstructuredWriter(String fileFormat, char fieldDelimiter, Writer writer) {
+
         // warn: false means plain text(old way), true means strict csv format
         if (Constant.FILE_FORMAT_TEXT.equals(fileFormat)) {
             return new TextWriterImpl(writer, fieldDelimiter);
@@ -23,9 +32,13 @@ public class TextCsvWriterManager {
     }
 }
 
+/**
+ * csv写入实现类
+ */
 class CsvWriterImpl implements UnstructuredWriter {
-    private static final Logger LOG = LoggerFactory
-            .getLogger(CsvWriterImpl.class);
+
+    private static final Logger LOG = LoggerFactory            .getLogger(CsvWriterImpl.class);
+
     // csv 严格符合csv语法, 有标准的转义等处理
     private char fieldDelimiter;
     private CsvWriter csvWriter;
@@ -60,6 +73,9 @@ class CsvWriterImpl implements UnstructuredWriter {
 
 }
 
+/**
+ * 普通文本写入实现类
+ */
 class TextWriterImpl implements UnstructuredWriter {
     private static final Logger LOG = LoggerFactory
             .getLogger(TextWriterImpl.class);

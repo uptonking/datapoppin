@@ -50,6 +50,7 @@
         <module>rdbmsreader</module>
 
         <module>txtfilereader</module>
+        <module>spreadsheetreader</module>
         <module>hdfsreader</module>
         <module>streamreader</module>
         <module>ftpreader</module>
@@ -66,6 +67,7 @@
         <module>rdbmswriter</module>
 
         <module>txtfilewriter</module>
+        <module>spreadsheetwriter</module>
         <module>hdfswriter</module>
         <module>streamwriter</module>
         <module>ftpwriter</module>

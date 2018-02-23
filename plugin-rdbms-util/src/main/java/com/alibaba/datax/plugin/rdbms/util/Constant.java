@@ -1,6 +1,10 @@
 package com.alibaba.datax.plugin.rdbms.util;
 
+/**
+ * 常用关系数据库错误代码及描述
+ */
 public final class Constant {
+
     static final int TIMEOUT_SECONDS = 15;
     static final int MAX_TRY_TIMES = 4;
     static final int SOCKET_TIMEOUT_INSECOND = 172800;
@@ -21,7 +25,6 @@ public final class Constant {
     public static final String ORACLE_TABLE_NAME = "table or view does not exist";
     public static final String ORACLE_SELECT_PRI = "insufficient privileges";
     public static final String ORACLE_SQL = "invalid identifier";
-
 
 
 }

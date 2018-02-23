@@ -1,0 +1,10 @@
+{
+    "name": "spreadsheetwriter",
+    "parameter": {
+        "path": "",
+        "fileName": "",
+        "writeMode": "",
+        "fieldDelimiter":"",
+        "dateFormat": ""
+    }
+}

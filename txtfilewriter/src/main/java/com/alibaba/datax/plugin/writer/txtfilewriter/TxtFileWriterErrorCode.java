@@ -3,10 +3,11 @@ package com.alibaba.datax.plugin.writer.txtfilewriter;
 import com.alibaba.datax.common.spi.ErrorCode;
 
 /**
+ * 文本写入异常 枚举类
  * Created by haiwei.luo on 14-9-17.
  */
 public enum TxtFileWriterErrorCode implements ErrorCode {
-    
+
     CONFIG_INVALID_EXCEPTION("TxtFileWriter-00", "您的参数配置错误."),
     REQUIRED_VALUE("TxtFileWriter-01", "您缺失了必须填写的参数值."),
     ILLEGAL_VALUE("TxtFileWriter-02", "您填写的参数值不合法."),
@@ -34,8 +35,7 @@ public enum TxtFileWriterErrorCode implements ErrorCode {
 
     @Override
     public String toString() {
-        return String.format("Code:[%s], Description:[%s].", this.code,
-                this.description);
+        return String.format("Code:[%s], Description:[%s].", this.code, this.description);
     }
 
 }

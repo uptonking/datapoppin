@@ -2,8 +2,11 @@ package com.alibaba.datax.plugin.rdbms.util;
 
 import com.alibaba.datax.common.spi.ErrorCode;
 
-//TODO
+/**
+ * 数据库操作错误代码及描述
+ */
 public enum DBUtilErrorCode implements ErrorCode {
+
     //连接错误
     MYSQL_CONN_USERPWD_ERROR("MYSQLErrCode-01","数据库用户名或者密码错误，请检查填写的账号密码或者联系DBA确认账号和密码是否正确"),
     MYSQL_CONN_IPPORT_ERROR("MYSQLErrCode-02","数据库服务的IP地址或者Port错误，请检查填写的IP地址和Port或者联系DBA确认IP地址和Port是否正确。如果是同步中心用户请联系DBA确认idb上录入的IP和PORT信息和数据库的当前实际信息是一致的"),

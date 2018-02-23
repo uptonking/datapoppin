@@ -3,6 +3,7 @@ package com.alibaba.datax.plugin.rdbms.util;
 import java.sql.Connection;
 
 /**
+ * jdbc连接工厂类
  * Date: 15/3/16 下午3:12
  */
 public class JdbcConnectionFactory implements ConnectionFactory {

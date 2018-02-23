@@ -7,7 +7,11 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.alibaba.fastjson.JSON;
 
+/**
+ * 列入口
+ */
 public class ColumnEntry {
+
     private Integer index;
     private String type;
     private String value;
@@ -53,11 +57,11 @@ public class ColumnEntry {
         return this.dateParse;
     }
 
-    public String toJSONString() {
-        return ColumnEntry.toJSONString(this);
-    }
-
     public static String toJSONString(ColumnEntry columnEntry) {
         return JSON.toJSONString(columnEntry);
+    }
+
+    public String toJSONString() {
+        return ColumnEntry.toJSONString(this);
     }
 }

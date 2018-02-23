@@ -3,6 +3,8 @@ package com.alibaba.datax.plugin.reader.mysqlreader;
 import com.alibaba.datax.common.spi.ErrorCode;
 
 public enum MysqlReaderErrorCode implements ErrorCode {
+
+    //此枚举类无实例对象
     ;
 
     private final String code;
@@ -25,7 +27,7 @@ public enum MysqlReaderErrorCode implements ErrorCode {
 
     @Override
     public String toString() {
-        return String.format("Code:[%s], Description:[%s]. ", this.code,
-                this.description);
+        return String.format("Code:[%s], Description:[%s]. ", this.code, this.description);
     }
+
 }

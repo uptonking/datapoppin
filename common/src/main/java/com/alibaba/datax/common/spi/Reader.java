@@ -11,7 +11,7 @@ import com.alibaba.datax.common.plugin.RecordSender;
 /**
  * Reader抽象类
  * <p>
- * 每个Reader插件在其内部内部实现Job、Task两个内部类。
+ * 每个Reader插件在其内部内部实现Job、Task两个内部类
  */
 public abstract class Reader extends BaseObject {
 
@@ -25,8 +25,7 @@ public abstract class Reader extends BaseObject {
         /**
          * 切分任务
          *
-         * @param adviceNumber 着重说明下，adviceNumber是框架建议插件切分的任务数，插件开发人员最好切分出来的任务数>=
-         *                     adviceNumber。<br>
+         * @param adviceNumber 说明：adviceNumber是框架建议插件切分的任务数，插件开发人员最好切分出来的任务数>=adviceNumber<br>
          *                     <br>
          *                     之所以采取这个建议是为了给用户最好的实现，例如框架根据计算认为用户数据存储可以支持100个并发连接，
          *                     并且用户认为需要100个并发。 此时，插件开发人员如果能够根据上述切分规则进行切分并做到>=100连接信息，
@@ -47,6 +46,7 @@ public abstract class Reader extends BaseObject {
      * Task抽象类
      */
     public static abstract class Task extends AbstractTaskPlugin {
+
         public abstract void startRead(RecordSender recordSender);
     }
 

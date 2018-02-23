@@ -6,8 +6,10 @@
 		<artifactId>datax-all</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
+
 	<artifactId>plugin-rdbms-util</artifactId>
 	<name>plugin-rdbms-util</name>
+	<description>RDBMS读写插件工具类，只依赖datax-common</description>
 	<packaging>jar</packaging>
 
 	<dependencies>
